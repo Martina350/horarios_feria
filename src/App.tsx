@@ -45,8 +45,10 @@ function App() {
         <div className="container-page py-4 md:py-5 flex flex-col gap-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center font-bold text-lg tracking-tight">
-                GM
+              <div className="h-10 w-10 flex items-center justify-center bg-white p-1.5 rounded-lg">
+                <span className="material-symbols-outlined text-[#1f4b9e] text-3xl font-bold">
+                  account_balance
+                </span>
               </div>
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-white/60">
@@ -57,11 +59,6 @@ function App() {
                 </h1>
               </div>
             </div>
-            <nav className="hidden md:flex items-center gap-6 text-sm text-white/80">
-              <button className="hover:text-white transition-colors">Inicio</button>
-              <button className="hover:text-white transition-colors">Beneficios</button>
-              <button className="hover:text-white transition-colors">Soporte</button>
-            </nav>
           </div>
 
           <div className="mt-2 bg-white/10 backdrop-blur rounded-2xl px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
