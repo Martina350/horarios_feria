@@ -8,7 +8,7 @@
   }
 
   body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Fredoka', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: radial-gradient(circle at top left, #4c96cc20, #f8f9fa 55%) fixed;
     color: #2c3e50;
     -webkit-font-smoothing: antialiased;
@@ -54,7 +54,7 @@
   }
 
   .modal-header-icon {
-    @apply h-10 w-10 rounded-full bg-[#4c96cc] flex items-center justify-center text-white font-bold text-xl shadow-md;
+    @apply h-10 w-10 rounded-full bg-white flex items-center justify-center text-[#1f4b9e] font-bold text-xl shadow-md border-2 border-[#ffd000] overflow-hidden;
   }
 
   .modal-body {
