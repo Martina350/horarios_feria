@@ -1,10 +1,15 @@
 export type SchoolReservation = {
+  id: string
   amie: string
   schoolName: string
   coordinatorName: string
   email: string
   whatsapp: string
   students: number
+  dayId: string
+  slotId: string
+  timestamp: Date
+  status: 'confirmada' | 'pendiente' | 'cancelada'
 }
 
 export type TimeSlot = {

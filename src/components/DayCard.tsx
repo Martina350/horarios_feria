@@ -2,7 +2,7 @@ import type { EventDay, TimeSlot } from "../data/eventData";
 
 type DayCardProps = {
   day: EventDay;
-  onReserveClick: (slot: TimeSlot) => void;
+  onReserveClick: (slot: TimeSlot, dayId: string) => void;
 };
 
 function getStatusStyles(available: number) {
@@ -124,7 +124,7 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
                   type="button"
                   className="w-full bg-[#ffd000] hover:bg-[#e6bc00] text-[#1f4b9e] py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-yellow-200/50 transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   disabled={isFull}
-                  onClick={() => onReserveClick(slot)}
+                  onClick={() => onReserveClick(slot, day.id)}
                 >
                   {isFull ? "Sin cupos disponibles" : "Reservar ahora"}
                 </button>

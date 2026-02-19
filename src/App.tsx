@@ -7,6 +7,7 @@ import {
 } from "./data/eventData";
 import { DayCard } from "./components/DayCard";
 import { ReservationModal } from "./components/ReservationModal";
+import { AdminDashboard } from "./components/admin/AdminDashboard";
 import sepsLogo from "./assets/logoseps.png";
 import michiLogo from "./assets/logomichi.png";
 import ososferia from "./assets/ososferia.png";
@@ -14,39 +15,59 @@ import ososferia from "./assets/ososferia.png";
 function App() {
   const [days, setDays] = useState<EventDay[]>(initialEventData);
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
+  const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAdminView, setIsAdminView] = useState(false);
 
-  const handleOpenReservation = (slot: TimeSlot) => {
+  const handleOpenReservation = (slot: TimeSlot, dayId: string) => {
     setSelectedSlot(slot);
+    setSelectedDayId(dayId);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedSlot(null);
+    setSelectedDayId(null);
   };
 
   const handleConfirmReservation = (reservation: SchoolReservation) => {
-    if (!selectedSlot) return;
+    if (!selectedSlot || !selectedDayId) return;
 
     setDays((prevDays) =>
-      prevDays.map((day) => ({
-        ...day,
-        slots: day.slots.map((slot) => {
-          if (slot.id === selectedSlot.id && day.slots.includes(selectedSlot)) {
-            // Actualizamos la lista de colegios y los cupos disponibles
-            return {
-              ...slot,
-              schools: [...slot.schools, reservation],
-              available: slot.available - reservation.students,
-            };
-          }
-          return slot;
-        }),
-      })),
+      prevDays.map((day) => {
+        if (day.id === selectedDayId) {
+          return {
+            ...day,
+            slots: day.slots.map((slot) => {
+              if (slot.id === selectedSlot.id) {
+                return {
+                  ...slot,
+                  schools: [...slot.schools, reservation],
+                  available: slot.available - reservation.students,
+                };
+              }
+              return slot;
+            }),
+          };
+        }
+        return day;
+      }),
     );
   };
 
+  // Vista de administración
+  if (isAdminView) {
+    return (
+      <AdminDashboard
+        days={days}
+        onUpdateDays={setDays}
+        onBack={() => setIsAdminView(false)}
+      />
+    );
+  }
+
+  // Vista pública
   return (
     <div className="relative min-h-screen">
       {/* Fondo decorativo con osos Global Money Week (discreto, no desvía la atención) */}
@@ -138,10 +159,22 @@ function App() {
         <ReservationModal
           isOpen={isModalOpen}
           slot={selectedSlot}
+          dayId={selectedDayId}
           onClose={handleCloseModal}
           onConfirm={handleConfirmReservation}
         />
       </div>
+
+      {/* Botón de acceso admin - Fuera del contenedor relativo */}
+      <button
+        onClick={() => setIsAdminView(true)}
+        className="fixed bottom-6 left-6 bg-slate-800 text-white px-5 py-3 rounded-full shadow-2xl hover:bg-slate-700 transition-all flex items-center gap-2 z-[9999] hover:scale-105 active:scale-95"
+        title="Acceder al panel de administración"
+        aria-label="Acceder al panel de administración"
+      >
+        <span className="material-symbols-outlined text-xl">admin_panel_settings</span>
+        <span className="font-bold text-sm">Admin</span>
+      </button>
     </div>
   );
 }

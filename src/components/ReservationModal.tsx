@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 type ReservationModalProps = {
   isOpen: boolean
   slot: TimeSlot | null
+  dayId: string | null
   onClose: () => void
   onConfirm: (values: SchoolReservation) => void
 }
@@ -28,7 +29,7 @@ const emptyForm: FormState = {
   students: '',
 }
 
-export function ReservationModal({ isOpen, slot, onClose, onConfirm }: ReservationModalProps) {
+export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: ReservationModalProps) {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
@@ -41,7 +42,7 @@ export function ReservationModal({ isOpen, slot, onClose, onConfirm }: Reservati
     }
   }, [isOpen])
 
-  if (!isOpen || !slot) return null
+  if (!isOpen || !slot || !dayId) return null
 
   const handleChange = (field: keyof FormState, rawValue: string) => {
     let value = rawValue
@@ -141,14 +142,23 @@ export function ReservationModal({ isOpen, slot, onClose, onConfirm }: Reservati
       return
     }
 
-    onConfirm({
+    if (!slot || !dayId) return
+
+    const newReservation: SchoolReservation = {
+      id: `reservation-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       amie: form.amie.trim(),
       schoolName: form.schoolName.trim(),
       coordinatorName: form.coordinatorName.trim(),
       email: form.email.trim(),
       whatsapp: form.whatsapp.trim(),
       students: studentsNumber,
-    })
+      dayId: dayId,
+      slotId: slot.id,
+      timestamp: new Date(),
+      status: 'pendiente',
+    }
+
+    onConfirm(newReservation)
 
     onClose()
   }
