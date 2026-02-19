@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { EventDay, SchoolReservation } from '../../data/eventData'
 import { MetricsCards } from './MetricsCards'
 // import { AlertsPanel } from './AlertsPanel'
-// import { ChartsSection } from './ChartsSection'
+import { ChartsSection } from './ChartsSection'
 import { SchoolsTable } from './SchoolsTable'
 import { EditReservationModal } from './EditReservationModal'
 
@@ -177,11 +177,11 @@ export function AdminDashboard({ days, onUpdateDays, onBack }: AdminDashboardPro
         {/* <AlertsPanel days={days} /> */}
 
         {/* Gráficos */}
-        {/* <div className="mb-6">
+        <div className="mb-6">
           {typeof window !== 'undefined' && (
             <ChartsSection days={days} />
           )}
-        </div> */}
+        </div>
 
         {/* Tabla de colegios */}
         <SchoolsTable

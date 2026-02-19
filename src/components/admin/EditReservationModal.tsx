@@ -305,7 +305,7 @@ export function EditReservationModal({
               </select>
             </div>
 
-            <div>
+            {/*<div>
               <label className="block text-sm font-bold mb-1" style={{ color: '#2c3e50' }}>Estado</label>
               <select
                 value={form.status}
@@ -330,7 +330,7 @@ export function EditReservationModal({
                 <option value="confirmada">Confirmada</option>
                 <option value="cancelada">Cancelada</option>
               </select>
-            </div>
+            </div>*/}
           </div>
 
           <div className="flex justify-end gap-4 pt-4" style={{ borderTop: '1px solid #e9ecef' }}>

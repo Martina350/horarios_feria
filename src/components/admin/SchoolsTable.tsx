@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import type { SchoolReservation, EventDay } from '../../data/eventData'
 import { getAllReservations } from '../../utils/metricsCalculator'
-import { exportReservationsToExcel, exportReservationsToCSV } from '../../utils/exportToExcel'
+import { exportReservationsToExcel } from '../../utils/exportToExcel'
 
 type SchoolsTableProps = {
   days: EventDay[]
@@ -15,8 +15,8 @@ type SortDirection = 'asc' | 'desc'
 export function SchoolsTable({ days, onEdit, onDelete }: SchoolsTableProps) {
   const allReservations = getAllReservations(days)
   const [searchTerm, setSearchTerm] = useState('')
-  const [sortField, setSortField] = useState<SortField>('timestamp')
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+  const [sortField, setSortField] = useState<SortField>('students')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
