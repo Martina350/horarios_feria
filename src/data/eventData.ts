@@ -2,7 +2,7 @@ export type SchoolReservation = {
   amie: string
   schoolName: string
   coordinatorName: string
-  coordinatorLastName: string
+  email: string
   whatsapp: string
   students: number
 }

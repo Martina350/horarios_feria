@@ -77,25 +77,25 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
                 </div>
 
                 <div className="space-y-4 mb-6">
-                  <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-2">
+                  <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-3 gap-4">
                     <span className="text-slate-500 font-medium">
                       Capacidad Total
                     </span>
-                    <span className="font-bold text-[#1f4b9e]">
+                    <span className="font-bold text-[#1f4b9e] whitespace-nowrap">
                       {slot.capacity} alumnos
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-sm">
+                  <div className="flex justify-between items-center text-sm gap-4">
                     <span className="text-slate-500 font-medium">
-                      Cupos Libres
+                      Cupos disponibles
                     </span>
-                    <span className={`text-xl font-black ${valueClass}`}>
-                      {slot.available}
+                    <span className={`text-xl font-black ${valueClass} whitespace-nowrap`}>
+                      {slot.available}/{slot.capacity}
                     </span>
                   </div>
                 </div>
 
-                <div className="bg-slate-50 rounded-2xl p-4 mb-4">
+                {/*<div className="bg-slate-50 rounded-2xl p-4 mb-4">
                   <p className="text-[10px] uppercase font-black text-slate-400 mb-2 tracking-widest">
                     {slot.schools.length === 0
                       ? "Inscritos"
@@ -118,7 +118,7 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
                       ))}
                     </div>
                   )}
-                </div>
+                </div>*/}
 
                 <button
                   type="button"

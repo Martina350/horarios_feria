@@ -12,7 +12,7 @@ type FormState = {
   amie: string
   schoolName: string
   coordinatorName: string
-  coordinatorLastName: string
+  email: string
   whatsapp: string
   students: string
 }
@@ -23,7 +23,7 @@ const emptyForm: FormState = {
   amie: '',
   schoolName: '',
   coordinatorName: '',
-  coordinatorLastName: '',
+  email: '',
   whatsapp: '',
   students: '',
 }
@@ -46,8 +46,8 @@ export function ReservationModal({ isOpen, slot, onClose, onConfirm }: Reservati
   const handleChange = (field: keyof FormState, rawValue: string) => {
     let value = rawValue
 
-    // No permitir espacios en todos los campos excepto nombre del colegio y número de alumnos
-    if (field !== 'schoolName' && field !== 'students') {
+    // No permitir espacios en todos los campos excepto nombre del colegio, nombres y apellidos del coordinador, y número de alumnos
+    if (field !== 'schoolName' && field !== 'students' && field !== 'coordinatorName') {
       value = value.replace(/\s+/g, '')
     }
 
@@ -62,9 +62,14 @@ export function ReservationModal({ isOpen, slot, onClose, onConfirm }: Reservati
       value = value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10)
     }
 
-    if (field === 'coordinatorName' || field === 'coordinatorLastName') {
-      // Máximo 50 caracteres para nombres y apellidos
-      value = value.slice(0, 50)
+    if (field === 'coordinatorName') {
+      // Máximo 100 caracteres para nombres y apellidos completos
+      value = value.slice(0, 100)
+    }
+
+    if (field === 'email') {
+      // Convertir a minúsculas y limitar longitud
+      value = value.toLowerCase().slice(0, 255)
     }
 
     // Limpiar error específico del campo al modificarlo
@@ -92,15 +97,22 @@ export function ReservationModal({ isOpen, slot, onClose, onConfirm }: Reservati
     }
 
     if (!form.schoolName.trim()) newFieldErrors.schoolName = 'El nombre del colegio es obligatorio.'
-    if (!form.coordinatorName.trim()) newFieldErrors.coordinatorName = 'El nombre del coordinador es obligatorio.'
-    if (!form.coordinatorLastName.trim()) newFieldErrors.coordinatorLastName =
-      'El apellido del coordinador es obligatorio.'
-    if (form.coordinatorName && form.coordinatorName.length > 50) {
-      newFieldErrors.coordinatorName = 'El nombre del coordinador no puede superar 50 caracteres.'
+    if (!form.coordinatorName.trim()) newFieldErrors.coordinatorName = 'Los nombres y apellidos del coordinador son obligatorios.'
+    if (form.coordinatorName && form.coordinatorName.length > 100) {
+      newFieldErrors.coordinatorName = 'Los nombres y apellidos no pueden superar 100 caracteres.'
     }
-    if (form.coordinatorLastName && form.coordinatorLastName.length > 50) {
-      newFieldErrors.coordinatorLastName =
-        'El apellido del coordinador no puede superar 50 caracteres.'
+
+    const emailTrimmed = form.email.trim()
+    if (!emailTrimmed) {
+      newFieldErrors.email = 'El correo electrónico es obligatorio.'
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(emailTrimmed)) {
+        newFieldErrors.email = 'Por favor ingresa un correo electrónico válido.'
+      }
+      if (emailTrimmed.length > 255) {
+        newFieldErrors.email = 'El correo electrónico no puede superar 255 caracteres.'
+      }
     }
 
     if (!whatsappTrimmed) newFieldErrors.whatsapp = 'El número de WhatsApp es obligatorio.'
@@ -133,7 +145,7 @@ export function ReservationModal({ isOpen, slot, onClose, onConfirm }: Reservati
       amie: form.amie.trim(),
       schoolName: form.schoolName.trim(),
       coordinatorName: form.coordinatorName.trim(),
-      coordinatorLastName: form.coordinatorLastName.trim(),
+      email: form.email.trim(),
       whatsapp: form.whatsapp.trim(),
       students: studentsNumber,
     })
@@ -217,13 +229,13 @@ export function ReservationModal({ isOpen, slot, onClose, onConfirm }: Reservati
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-1">
-                Nombre del coordinador
+                Nombres y apellidos del coordinador
               </label>
               <input
                 type="text"
                 value={form.coordinatorName}
                 onChange={(e) => handleChange('coordinatorName', e.target.value)}
-                placeholder="Tus nombres"
+                placeholder="Nombres y apellidos completos"
                 className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#1f4b9e]/10 transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium"
               />
               {fieldErrors.coordinatorName && (
@@ -233,18 +245,18 @@ export function ReservationModal({ isOpen, slot, onClose, onConfirm }: Reservati
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-1">
-                Apellido del coordinador
+                Correo electrónico
               </label>
               <input
-                type="text"
-                value={form.coordinatorLastName}
-                onChange={(e) => handleChange('coordinatorLastName', e.target.value)}
-                placeholder="Tus apellidos"
+                type="email"
+                value={form.email}
+                onChange={(e) => handleChange('email', e.target.value)}
+                placeholder="correo@ejemplo.com"
                 className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#1f4b9e]/10 transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium"
               />
-              {fieldErrors.coordinatorLastName && (
+              {fieldErrors.email && (
                 <p className="mt-1 text-xs text-red-600">
-                  {fieldErrors.coordinatorLastName}
+                  {fieldErrors.email}
                 </p>
               )}
             </div>
@@ -302,7 +314,7 @@ export function ReservationModal({ isOpen, slot, onClose, onConfirm }: Reservati
               type="submit"
               className="w-full sm:w-auto px-10 py-3.5 bg-[#ffd000] text-[#1f4b9e] font-extrabold rounded-2xl shadow-xl shadow-[#ffd000]/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 border-b-4 border-black/10"
             >
-              Confirmar reserva
+              Reservar ahora
               <span className="material-symbols-outlined font-bold">rocket_launch</span>
             </button>
           </div>
@@ -311,7 +323,7 @@ export function ReservationModal({ isOpen, slot, onClose, onConfirm }: Reservati
         <div className="px-8 py-5 bg-[#1f4b9e]/5 flex items-center gap-3 border-t border-[#1f4b9e]/10">
           <span className="material-symbols-outlined text-[#1f4b9e]">verified_user</span>
           <p className="text-sm text-[#1f4b9e]/80 font-medium">
-            Al confirmar, recibirás un comprobante digital en tu correo.
+            Revisa tu correo para confirmar la reserva.
           </p>
         </div>
       </div>
