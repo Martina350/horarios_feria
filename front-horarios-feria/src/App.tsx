@@ -1,23 +1,26 @@
 import { useState } from "react";
-import {
-  initialEventData,
-  type EventDay,
-  type SchoolReservation,
-  type TimeSlot,
-} from "./data/eventData";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEvents } from "./hooks/useEvents";
+import { useCreateReservation } from "./hooks/useReservations";
 import { DayCard } from "./components/DayCard";
 import { ReservationModal } from "./components/ReservationModal";
 import { AdminDashboard } from "./components/admin/AdminDashboard";
+import { LoginPage } from "./components/admin/LoginPage";
+import { useAuth } from "./contexts/AuthContext";
+import type { TimeSlot } from "./data/eventData";
 import sepsLogo from "./assets/logoseps.png";
 import michiLogo from "./assets/logomichi.png";
 import ososferia from "./assets/ososferia.png";
 
-function App() {
-  const [days, setDays] = useState<EventDay[]>(initialEventData);
+/**
+ * Componente para la vista pública
+ */
+function PublicView() {
+  const { data: days, isLoading, error } = useEvents();
+  const createReservation = useCreateReservation();
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAdminView, setIsAdminView] = useState(false);
 
   const handleOpenReservation = (slot: TimeSlot, dayId: string) => {
     setSelectedSlot(slot);
@@ -31,46 +34,74 @@ function App() {
     setSelectedDayId(null);
   };
 
-  const handleConfirmReservation = (reservation: SchoolReservation) => {
+  const handleConfirmReservation = async (reservationData: any) => {
     if (!selectedSlot || !selectedDayId) return;
 
-    setDays((prevDays) =>
-      prevDays.map((day) => {
-        if (day.id === selectedDayId) {
-          return {
-            ...day,
-            slots: day.slots.map((slot) => {
-              if (slot.id === selectedSlot.id) {
-                return {
-                  ...slot,
-                  schools: [...slot.schools, reservation],
-                  available: slot.available - reservation.students,
-                };
-              }
-              return slot;
-            }),
-          };
-        }
-        return day;
-      }),
-    );
+    try {
+      await createReservation.mutateAsync({
+        amie: reservationData.amie,
+        schoolName: reservationData.schoolName,
+        coordinatorName: reservationData.coordinatorName,
+        coordinatorLastName: reservationData.coordinatorLastName,
+        email: reservationData.email,
+        whatsapp: reservationData.whatsapp,
+        students: reservationData.students,
+        dayId: selectedDayId,
+        slotId: selectedSlot.id,
+      });
+      handleCloseModal();
+    } catch (error) {
+      // El error se maneja en el componente ReservationModal
+      throw error;
+    }
   };
 
-  // Vista de administración
-  if (isAdminView) {
+  if (isLoading) {
     return (
-      <AdminDashboard
-        days={days}
-        onUpdateDays={setDays}
-        onBack={() => setIsAdminView(false)}
-      />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1f4b9e] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Cargando horarios...</p>
+        </div>
+      </div>
     );
   }
 
-  // Vista pública
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">Error al cargar los horarios</p>
+          <p className="text-gray-600 mt-2">Por favor, intenta más tarde</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!days || days.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">No hay horarios disponibles</p>
+      </div>
+    );
+  }
+
+  // Convertir EventDayResponse a EventDay para compatibilidad con componentes existentes
+  const convertedDays = days.map((day) => ({
+    id: day.id,
+    day: day.day,
+    slots: day.slots.map((slot) => ({
+      id: slot.id,
+      time: slot.time,
+      capacity: slot.capacity,
+      available: slot.available,
+      schools: [], // Las reservas se obtienen del backend
+    })),
+  }));
+
   return (
     <div className="relative min-h-screen">
-      {/* Fondo decorativo con osos Global Money Week (discreto, no desvía la atención) */}
+      {/* Fondo decorativo */}
       <div
         className="fixed inset-0 z-0 bg-center bg-no-repeat bg-contain opacity-[0.17] pointer-events-none"
         style={{ backgroundImage: `url(${ososferia})` }}
@@ -146,7 +177,7 @@ function App() {
           </p>
 
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {days.map((day) => (
+            {convertedDays.map((day) => (
               <DayCard
                 key={day.id}
                 day={day}
@@ -164,18 +195,48 @@ function App() {
           onConfirm={handleConfirmReservation}
         />
       </div>
-
-      {/* Botón de acceso admin - Fuera del contenedor relativo */}
-      <button
-        onClick={() => setIsAdminView(true)}
-        className="fixed bottom-6 left-6 bg-slate-800 text-white px-5 py-3 rounded-full shadow-2xl hover:bg-slate-700 transition-all flex items-center gap-2 z-[9999] hover:scale-105 active:scale-95"
-        title="Acceder al panel de administración"
-        aria-label="Acceder al panel de administración"
-      >
-        <span className="material-symbols-outlined text-xl">admin_panel_settings</span>
-        <span className="font-bold text-sm">Admin</span>
-      </button>
     </div>
+  );
+}
+
+/**
+ * Ruta protegida para admin
+ */
+function ProtectedAdminRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1f4b9e]"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<PublicView />} />
+        <Route path="/admin/login" element={<LoginPage />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboard />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

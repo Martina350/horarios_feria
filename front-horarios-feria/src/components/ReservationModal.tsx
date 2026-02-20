@@ -78,7 +78,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
     setFieldErrors({})
@@ -144,23 +144,32 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
 
     if (!slot || !dayId) return
 
-    const newReservation: SchoolReservation = {
-      id: `reservation-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    // onConfirm ahora es async y maneja la llamada al API
+    // Pasar los datos directamente sin crear el objeto completo
+    const reservationData = {
       amie: form.amie.trim(),
       schoolName: form.schoolName.trim(),
       coordinatorName: form.coordinatorName.trim(),
       email: form.email.trim(),
       whatsapp: form.whatsapp.trim(),
       students: studentsNumber,
-      dayId: dayId,
-      slotId: slot.id,
-      timestamp: new Date(),
-      status: 'pendiente',
     }
 
-    onConfirm(newReservation)
-
-    onClose()
+    try {
+      await onConfirm(reservationData)
+      onClose()
+    } catch (error: any) {
+      // Manejar errores del API
+      const errorMessage = error?.response?.data?.message || error?.message || 'Error al crear la reserva'
+      setError(errorMessage)
+      
+      // Si es un error de validación específico, intentar mostrarlo en el campo correspondiente
+      if (error?.response?.data?.message?.includes('AMIE')) {
+        setFieldErrors({ amie: error.response.data.message })
+      } else if (error?.response?.data?.message?.includes('cupos')) {
+        setFieldErrors({ students: error.response.data.message })
+      }
+    }
   }
 
   return (

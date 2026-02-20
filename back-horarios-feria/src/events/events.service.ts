@@ -68,6 +68,7 @@ export class EventsService {
 
   /**
    * Formatea la fecha en formato legible
+   * Usa métodos UTC para evitar problemas de zona horaria
    */
   private formatDate(date: Date): string {
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -86,9 +87,11 @@ export class EventsService {
       'diciembre',
     ];
 
-    const dayName = days[date.getDay()];
-    const day = date.getDate();
-    const month = months[date.getMonth()];
+    // Usar métodos UTC para evitar problemas de zona horaria
+    // Si la fecha viene como '2026-03-16T00:00:00.000Z', queremos mostrar 16, no 15
+    const dayName = days[date.getUTCDay()];
+    const day = date.getUTCDate();
+    const month = months[date.getUTCMonth()];
 
     return `${dayName} ${day} ${month}`;
   }

@@ -1,13 +1,10 @@
-import type { EventDay } from '../../data/eventData'
-import { calculateGeneralMetrics } from '../../utils/metricsCalculator'
+import type { GeneralMetrics } from '../../types/api';
 
 type MetricsCardsProps = {
-  days: EventDay[]
-}
+  metrics: GeneralMetrics;
+};
 
-export function MetricsCards({ days }: MetricsCardsProps) {
-  const metrics = calculateGeneralMetrics(days)
-
+export function MetricsCards({ metrics }: MetricsCardsProps) {
   const cards = [
     {
       title: 'Total de Colegios',
@@ -28,57 +25,56 @@ export function MetricsCards({ days }: MetricsCardsProps) {
       valueColor: '#4c96cc',
     },
     {
-      title: 'Capacidad Total',
+      title: 'Capacidad Global',
       value: metrics.totalCapacity.toLocaleString(),
       icon: 'event_seat',
-      iconBg: '#1f4b9e',
-      bgColor: '#f8f9fa',
-      textColor: '#2c3e50',
-      valueColor: '#1f4b9e',
-    },
-    {
-      title: 'Tasa de Ocupación',
-      value: `${metrics.occupancyRate}%`,
-      icon: 'trending_up',
       iconBg: '#ffd000',
       bgColor: '#f8f9fa',
       textColor: '#2c3e50',
       valueColor: '#ffd000',
     },
-  ]
+    {
+      title: 'Tasa de Ocupación',
+      value: `${metrics.occupancyRate.toFixed(2)}%`,
+      icon: 'trending_up',
+      iconBg: '#1f4b9e',
+      bgColor: '#f8f9fa',
+      textColor: '#2c3e50',
+      valueColor: '#1f4b9e',
+    },
+  ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      {cards.map((card) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {cards.map((card, index) => (
         <div
-          key={card.title}
-          className="rounded-2xl p-6 shadow-lg border"
-          style={{
-            backgroundColor: card.bgColor,
-            borderColor: '#e9ecef',
-          }}
+          key={index}
+          className="bg-white rounded-lg shadow-md p-6 border border-gray-200"
+          style={{ backgroundColor: card.bgColor }}
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="material-symbols-outlined text-3xl" style={{ color: '#6c757d' }}>
-              {card.icon}
-            </span>
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <p className="text-sm font-medium" style={{ color: card.textColor }}>
+                {card.title}
+              </p>
+              <p
+                className="text-3xl font-bold mt-2"
+                style={{ color: card.valueColor }}
+              >
+                {card.value}
+              </p>
+            </div>
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              className="w-12 h-12 rounded-lg flex items-center justify-center"
               style={{ backgroundColor: card.iconBg }}
             >
-              <span className="material-symbols-outlined text-white text-xl">
+              <span className="material-symbols-outlined text-white text-2xl">
                 {card.icon}
               </span>
             </div>
           </div>
-          <h3 className="text-sm font-bold mb-1" style={{ color: card.textColor }}>
-            {card.title}
-          </h3>
-          <p className="text-3xl font-black" style={{ color: card.valueColor }}>
-            {card.value}
-          </p>
         </div>
       ))}
     </div>
-  )
+  );
 }

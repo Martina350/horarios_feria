@@ -41,10 +41,11 @@ async function main() {
   console.log('✅ Usuario admin creado:', admin.email);
 
   // Crear eventos con horarios
+  // Usar Date.UTC para crear fechas en UTC y evitar problemas de zona horaria
   const events = [
     {
       name: 'Global Money Week 2026',
-      date: new Date('2026-03-16'),
+      date: new Date(Date.UTC(2026, 2, 16)), // Marzo es mes 2 (0-indexed), día 16
       slots: [
         { timeStart: '09h00', timeEnd: '11h00', capacity: 200 },
         { timeStart: '11h00', timeEnd: '13h00', capacity: 200 },
@@ -53,7 +54,7 @@ async function main() {
     },
     {
       name: 'Global Money Week 2026',
-      date: new Date('2026-03-17'),
+      date: new Date(Date.UTC(2026, 2, 17)), // Marzo es mes 2 (0-indexed), día 17
       slots: [
         { timeStart: '09h00', timeEnd: '11h00', capacity: 200 },
         { timeStart: '11h00', timeEnd: '13h00', capacity: 200 },
@@ -62,7 +63,7 @@ async function main() {
     },
     {
       name: 'Global Money Week 2026',
-      date: new Date('2026-03-18'),
+      date: new Date(Date.UTC(2026, 2, 18)), // Marzo es mes 2 (0-indexed), día 18
       slots: [
         { timeStart: '09h00', timeEnd: '11h00', capacity: 200 },
         { timeStart: '11h00', timeEnd: '13h00', capacity: 200 },
