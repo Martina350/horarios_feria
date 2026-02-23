@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import * as handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -8,25 +8,16 @@ import * as path from 'path';
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
-  private transporter: nodemailer.Transporter;
+  private resend: Resend | null = null;
 
   constructor(private configService: ConfigService) {
-    const smtpUser = this.configService.get<string>('SMTP_USER');
-    const smtpPass = this.configService.get<string>('SMTP_PASS');
+    const resendApiKey = this.configService.get<string>('RESEND_API_KEY');
     
-    // Solo crear transporter si hay credenciales configuradas
-    if (smtpUser && smtpPass) {
-      this.transporter = nodemailer.createTransport({
-        host: this.configService.get<string>('SMTP_HOST') || 'smtp.gmail.com',
-        port: parseInt(this.configService.get<string>('SMTP_PORT') || '587'),
-        secure: false, // true para 465, false para otros puertos
-        auth: {
-          user: smtpUser,
-          pass: smtpPass,
-        },
-      });
+    // Solo crear cliente Resend si hay API key configurada
+    if (resendApiKey) {
+      this.resend = new Resend(resendApiKey);
     } else {
-      this.logger.warn('SMTP no configurado. Los emails no se enviarán.');
+      this.logger.warn('RESEND_API_KEY no configurada. Los emails no se enviarán.');
     }
   }
 
@@ -42,10 +33,10 @@ export class EmailService {
     students: number;
     reservationId: string;
   }): Promise<void> {
-    // Si no hay transporter configurado, solo loguear
-    if (!this.transporter) {
+    // Si no hay cliente Resend configurado, solo loguear
+    if (!this.resend) {
       this.logger.warn(
-        `Email no enviado (SMTP no configurado) para reserva ${data.reservationId} a ${data.email}`,
+        `Email no enviado (RESEND_API_KEY no configurada) para reserva ${data.reservationId} a ${data.email}`,
       );
       return;
     }
@@ -75,14 +66,25 @@ export class EmailService {
         reservationId: data.reservationId,
       });
 
-      const mailOptions = {
-        from: `"${this.configService.get<string>('SMTP_FROM_NAME') || 'Global Money Week'}" <${this.configService.get<string>('SMTP_FROM') || this.configService.get<string>('SMTP_USER')}>`,
+      // Obtener email de origen desde configuración
+      // Resend requiere que el dominio esté verificado en su plataforma
+      // Prioridad: FROM_EMAIL > RESEND_FROM > SMTP_FROM
+      const fromEmail = this.configService.get<string>('FROM_EMAIL') || 
+                       this.configService.get<string>('RESEND_FROM') || 
+                       this.configService.get<string>('SMTP_FROM');
+      const fromName = this.configService.get<string>('SMTP_FROM_NAME') || 'Global Money Week';
+
+      if (!fromEmail) {
+        throw new Error('FROM_EMAIL, RESEND_FROM o SMTP_FROM debe estar configurado en las variables de entorno');
+      }
+
+      await this.resend.emails.send({
+        from: `${fromName} <${fromEmail}>`,
         to: data.email,
         subject: 'Confirmación de Reserva - Global Money Week',
         html,
-      };
+      });
 
-      await this.transporter.sendMail(mailOptions);
       this.logger.log(`Email de confirmación enviado a ${data.email}`);
     } catch (error) {
       this.logger.error(
