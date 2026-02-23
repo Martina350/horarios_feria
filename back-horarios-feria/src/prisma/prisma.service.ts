@@ -6,7 +6,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
-  constructor(private configService: ConfigService) {
+  constructor(private readonly configService: ConfigService) {
     const databaseUrl = configService.get<string>('DATABASE_URL');
     if (!databaseUrl) {
       throw new Error('DATABASE_URL no está configurada');

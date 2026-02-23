@@ -46,6 +46,18 @@ model TimeSlot {
   @@map("time_slots")
 }
 
+model School {
+  id           String        @id @default(uuid())
+  amie         String        @unique
+  name         String
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  reservations Reservation[]
+
+  @@map("schools")
+  @@index([amie])
+}
+
 model Reservation {
   id                String   @id @default(uuid())
   amie              String
@@ -61,11 +73,14 @@ model Reservation {
   timestamp         DateTime  @default(now())
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")
+  schoolId          String?   @map("school_id")
   slot              TimeSlot  @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  school            School?   @relation(fields: [schoolId], references: [id], onDelete: SetNull)
 
   @@index([amie])
   @@index([slotId])
   @@index([dayId])
   @@index([email])
+  @@index([schoolId])
   @@map("reservations")
 }

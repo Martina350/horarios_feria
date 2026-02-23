@@ -95,7 +95,25 @@ export class ReservationsService {
           );
         }
 
-        // Crear la reserva
+        // Buscar o crear la escuela automáticamente
+        let school = await tx.school.findUnique({
+          where: { amie: dto.amie },
+        });
+
+        if (!school) {
+          // Crear la escuela si no existe
+          school = await tx.school.create({
+            data: {
+              amie: dto.amie,
+              name: dto.schoolName,
+            },
+          });
+          this.logger.log(
+            `Escuela creada automáticamente: AMIE ${dto.amie} - ${dto.schoolName}`,
+          );
+        }
+
+        // Crear la reserva asociada a la escuela
         return await tx.reservation.create({
           data: {
             amie: dto.amie,
@@ -108,6 +126,7 @@ export class ReservationsService {
             dayId: dto.dayId,
             slotId: dto.slotId,
             status: 'pendiente',
+            schoolId: school.id,
           },
         });
       },
