@@ -504,6 +504,4 @@ Verifica que PostgreSQL esté corriendo y que la URL de conexión sea correcta.
 ### Error: JWT_SECRET no está definida
 Configura `JWT_SECRET` en el archivo `.env` con una clave segura de al menos 32 caracteres.
 
-## 📄 Licencia
-
-ISC
+## 📄 LicenciaISC
