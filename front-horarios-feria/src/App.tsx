@@ -108,7 +108,7 @@ function PublicView() {
         aria-hidden="true"
       />
       <div className="relative z-10 flex flex-col min-h-screen">
-        <header className="bg-[#1f4b9e] text-white shadow-lg">
+        <header className="bg-[#A72974] text-white shadow-lg">
           <div className="container-page py-4 md:py-5 flex flex-col gap-4">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -120,10 +120,10 @@ function PublicView() {
                   />
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/60">
+                  <p className="text-xs uppercase tracking-[0.2em] text-white/60 font-myriad">
                     Centro de Exposiciones Quito
                   </p>
-                  <h1 className="text-2xl md:text-3xl font-semibold leading-tight">
+                  <h1 className="text-2xl md:text-3xl font-semibold leading-tight font-childhood">
                     Global Money Week
                   </h1>
                 </div>
@@ -139,10 +139,10 @@ function PublicView() {
 
             <div className="mt-2 bg-white/10 backdrop-blur rounded-2xl px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <div>
-                <p className="text-xs md:text-sm font-medium flex items-center gap-2">
+                <p className="text-xs md:text-sm font-medium flex items-center gap-2 font-gothic">
                   Disponibilidad de horarios
                 </p>
-                <p className="text-xs md:text-sm text-white/80">
+                <p className="text-xs md:text-sm text-white/80 font-myriad">
                   Selecciona tu franja horaria para asistir a Global Money Week
                   en el Centro de Exposiciones Quito.
                 </p>
@@ -166,11 +166,11 @@ function PublicView() {
         </header>
 
         <main className="container-page space-y-6 flex-1">
-          <p className="text-sm md:text-base text-[#6c757d] max-w-3xl">
+          <p className="text-sm md:text-base text-[#6c757d] max-w-3xl font-myriad">
             Visualiza la disponibilidad de cupos por día y horario, y realiza la
             reserva de tu unidad educativa de manera rápida y segura. Cada
             franja cuenta con una capacidad máxima de{" "}
-            <span className="font-semibold text-[#1f4b9e]">
+            <span className="font-semibold text-[#1f4b9e] font-gothic">
               200 estudiantes
             </span>
             .

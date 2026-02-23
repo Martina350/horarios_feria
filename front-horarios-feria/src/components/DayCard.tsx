@@ -37,10 +37,10 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
   return (
     <section className="space-y-6">
       <header className="flex items-center gap-3 px-2 mb-1">
-        <div className="w-10 h-10 rounded-xl bg-[#1f4b9e] flex items-center justify-center text-white">
+        <div className="w-10 h-10 rounded-xl bg-[#006837] flex items-center justify-center text-white">
           <span className="material-symbols-outlined">calendar_month</span>
         </div>
-        <h2 className="text-xl font-extrabold text-[#1f4b9e] uppercase tracking-tight">
+        <h2 className="text-xl font-extrabold text-[#006837] uppercase tracking-tight font-childhood">
           {day.day}
         </h2>
       </header>
@@ -62,15 +62,15 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
               <div className="flex-1 space-y-6">
                 <div className="flex justify-between items-start mb-1">
                   <div>
-                    <p className="text-3xl font-black text-[#1f4b9e] leading-none">
+                    <p className="text-3xl font-black text-[#1f4b9e] leading-none font-childhood">
                       {startDisplay}
                     </p>
-                    <p className="text-sm font-bold text-slate-400 mt-1">
+                    <p className="text-sm font-bold text-slate-400 mt-1 font-myriad">
                       hasta las {rawEnd}
                     </p>
                   </div>
                   <span
-                    className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${chipClass}`}
+                    className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider font-gothic ${chipClass}`}
                   >
                     {label}
                   </span>
@@ -78,18 +78,18 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
 
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-3 gap-4">
-                    <span className="text-slate-500 font-medium">
+                    <span className="text-slate-500 font-medium font-myriad">
                       Capacidad Total
                     </span>
-                    <span className="font-bold text-[#1f4b9e] whitespace-nowrap">
+                    <span className="font-bold text-[#1f4b9e] whitespace-nowrap font-gothic">
                       {slot.capacity} alumnos
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm gap-4">
-                    <span className="text-slate-500 font-medium">
+                    <span className="text-slate-500 font-medium font-myriad">
                       Cupos disponibles
                     </span>
-                    <span className={`text-xl font-black ${valueClass} whitespace-nowrap`}>
+                    <span className={`text-xl font-black ${valueClass} whitespace-nowrap font-gothic`}>
                       {slot.available}/{slot.capacity}
                     </span>
                   </div>
@@ -122,7 +122,7 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
 
                 <button
                   type="button"
-                  className="w-full bg-[#ffd000] hover:bg-[#e6bc00] text-[#1f4b9e] py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-yellow-200/50 transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full bg-[#ffd000] hover:bg-[#e6bc00] text-[#1f4b9e] py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-yellow-200/50 transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed font-childhood"
                   disabled={isFull}
                   onClick={() => onReserveClick(slot, day.id)}
                 >
@@ -130,7 +130,7 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
                 </button>
               </div>
               {isFull && (
-                <p className="mt-2 text-xs text-[#c53030] font-medium">
+                <p className="mt-2 text-xs text-[#c53030] font-medium font-myriad">
                   Este horario ha alcanzado su capacidad máxima.
                 </p>
               )}

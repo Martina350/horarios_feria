@@ -68,7 +68,7 @@ export function AdminDashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1f4b9e] mx-auto"></div>
-          <p className="mt-4 text-gray-600">Cargando datos...</p>
+          <p className="mt-4 text-gray-600 font-myriad">Cargando datos...</p>
         </div>
       </div>
     );
@@ -101,8 +101,8 @@ export function AdminDashboard() {
                 <span className="material-symbols-outlined">arrow_back</span>
               </button>
               <div>
-                <h1 className="text-2xl font-bold">Panel de Administración</h1>
-                <p className="text-sm text-white/80">Global Money Week - Gestión de Reservas</p>
+                <h1 className="text-2xl font-bold font-childhood">Panel de Administración</h1>
+                <p className="text-sm text-white/80 font-myriad">Global Money Week - Gestión de Reservas</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -111,11 +111,11 @@ export function AdminDashboard() {
                 className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-2"
               >
                 <span className="material-symbols-outlined">logout</span>
-                <span>Cerrar sesión</span>
+                <span className="font-myriad">Cerrar sesión</span>
               </button>
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined">admin_panel_settings</span>
-                <span className="font-medium">Admin</span>
+                <span className="font-medium font-gothic">Admin</span>
               </div>
             </div>
           </div>

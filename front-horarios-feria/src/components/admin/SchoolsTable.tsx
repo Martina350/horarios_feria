@@ -122,7 +122,7 @@ export function SchoolsTable({
   return (
     <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <h3 className="text-xl font-bold" style={{ color: '#2c3e50' }}>
+        <h3 className="text-xl font-bold font-gothic" style={{ color: '#2c3e50' }}>
           Tabla de Colegios Inscritos
         </h3>
         <div className="flex gap-2">
@@ -131,7 +131,7 @@ export function SchoolsTable({
             className="px-4 py-2 bg-[#1f4b9e] text-white rounded-lg hover:bg-[#1a3d7d] transition-colors flex items-center gap-2"
           >
             <span className="material-symbols-outlined">download</span>
-            Exportar Excel
+            <span className="font-gothic">Exportar Excel</span>
           </button>
         </div>
       </div>
@@ -146,7 +146,7 @@ export function SchoolsTable({
             setSearchTerm(e.target.value);
             setCurrentPage(1);
           }}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1f4b9e]"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1f4b9e] font-myriad"
         />
       </div>
 
