@@ -67,7 +67,7 @@ export function AdminDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1f4b9e] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
           <p className="mt-4 text-gray-600 font-myriad">Cargando datos...</p>
         </div>
       </div>
@@ -89,7 +89,7 @@ export function AdminDashboard() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f8f9fa' }}>
       {/* Header */}
-      <header className="bg-[#1f4b9e] text-white shadow-lg">
+      <header className="bg-primary text-white shadow-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">

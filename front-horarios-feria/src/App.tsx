@@ -11,6 +11,7 @@ import type { TimeSlot } from "./data/eventData";
 import sepsLogo from "./assets/logoseps.png";
 import michiLogo from "./assets/logomichi.png";
 import fondo from "./assets/fondo-GMW.png";
+import logoGMW from "./assets/Logo-GMW-verde.png";
 
 /**
  * Componente para la vista pública
@@ -60,7 +61,7 @@ function PublicView() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1f4b9e] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
           <p className="mt-4 text-gray-600">Cargando horarios...</p>
         </div>
       </div>
@@ -108,74 +109,62 @@ function PublicView() {
         aria-hidden="true"
       />
       <div className="relative z-10 flex flex-col min-h-screen">
-        <header className="bg-[#A72974] text-white shadow-lg">
+        <header className="bg-primary text-white shadow-lg">
           <div className="container-page py-4 md:py-5 flex flex-col gap-4">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="h-13 w-14 flex items-center justify-center bg-white p-1.65 rounded-lg">
+            <div className="flex flex-col md:flex-row md:items-center gap-6">
+              {/* Logo GMW a la izquierda */}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-start">
                   <img
-                    src={sepsLogo}
-                    alt="Superintendencia de Economía Popular y Solidaria"
-                    className="h-16 w-15 object-contain"
+                    src={logoGMW}
+                    alt="Global Money Week"
+                    className="h-24 md:h-32 lg:h-25 w-auto object-contain"
                   />
                 </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/60 font-myriad">
-                    Centro de Exposiciones Quito
-                  </p>
-                  <h1 className="text-2xl md:text-3xl font-semibold leading-tight font-childhood">
-                    Global Money Week
-                  </h1>
-                </div>
               </div>
-              <div className="flex justify-start md:justify-end">
-                <img
-                  src={michiLogo}
-                  alt="Michi Money"
-                  className="h-10 md:h-14 w-auto object-contain drop-shadow-lg"
-                />
-              </div>
-            </div>
 
-            <div className="mt-2 bg-white/10 backdrop-blur rounded-2xl px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-              <div>
-                <p className="text-xs md:text-sm font-medium flex items-center gap-2 font-gothic">
-                  Disponibilidad de horarios
-                </p>
-                <p className="text-xs md:text-sm text-white/80 font-myriad">
-                  Selecciona tu franja horaria para asistir a Global Money Week
-                  en el Centro de Exposiciones Quito.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2 text-[11px] md:text-xs">
-                <span className="badge bg-[#e6f7d9] text-[#2c7a1f]">
-                  <span className="h-2 w-2 rounded-full bg-[#2c7a1f] mr-1.5" />
-                  Alta (&gt; 100)
-                </span>
-                <span className="badge bg-[#fff4d2] text-[#d88700]">
-                  <span className="h-2 w-2 rounded-full bg-[#d88700] mr-1.5" />
-                  Media (50–100)
-                </span>
-                <span className="badge bg-[#ffe3e3] text-[#c53030]">
-                  <span className="h-2 w-2 rounded-full bg-[#c53030] mr-1.5" />
-                  Baja (&lt; 50)
-                </span>
+              {/* Div de disponibilidad a la derecha */}
+              <div className="flex-1 bg-white/10 backdrop-blur rounded-2xl px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div>
+                  <p className="text-xs md:text-sm font-medium flex items-center gap-2 font-gothic">
+                    Disponibilidad de horarios
+                  </p>
+                  <p className="text-xs md:text-sm text-white/80 font-myriad">
+                    Selecciona tu franja horaria para asistir a Global Money Week
+                    en el Centro de Exposiciones Quito.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2 text-[11px] md:text-xs">
+                  <span className="badge bg-[#e6f7d9] text-[#2c7a1f]">
+                    <span className="h-2 w-2 rounded-full bg-[#2c7a1f] mr-1.5" />
+                    Alta (&gt; 100)
+                  </span>
+                  <span className="badge bg-[#fff4d2] text-[#d88700]">
+                    <span className="h-2 w-2 rounded-full bg-[#d88700] mr-1.5" />
+                    Media (50–100)
+                  </span>
+                  <span className="badge bg-[#ffe3e3] text-[#c53030]">
+                    <span className="h-2 w-2 rounded-full bg-[#c53030] mr-1.5" />
+                    Baja (&lt; 50)
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </header>
 
         <main className="container-page space-y-6 flex-1">
+        <div className="mt-2 bg-white/80 backdrop-blur rounded-2xl px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <p className="text-sm md:text-base text-[#6c757d] max-w-3xl font-myriad">
             Visualiza la disponibilidad de cupos por día y horario, y realiza la
             reserva de tu unidad educativa de manera rápida y segura. Cada
             franja cuenta con una capacidad máxima de{" "}
-            <span className="font-semibold text-[#1f4b9e] font-gothic">
+            <span className="font-semibold text-primary font-gothic">
               200 estudiantes
             </span>
             .
           </p>
-
+          </div>
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {convertedDays.map((day) => (
               <DayCard
@@ -208,7 +197,7 @@ function ProtectedAdminRoute({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1f4b9e]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }

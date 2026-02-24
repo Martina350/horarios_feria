@@ -10,8 +10,8 @@ function getStatusStyles(available: number) {
     return {
       label: "DISPONIBLE",
       chipClass:
-        "bg-emerald-50 text-emerald-600 border border-emerald-100",
-      valueClass: "text-[#16a34a]",
+        "bg-secondary/20 text-secondary border border-secondary/30",
+      valueClass: "text-secondary",
       cardAccentClass: "",
     };
   }
@@ -19,17 +19,17 @@ function getStatusStyles(available: number) {
   if (available >= 50) {
     return {
       label: "MEDIA",
-      chipClass: "bg-amber-50 text-amber-600 border border-amber-100",
-      valueClass: "text-[#f59e0b]",
+      chipClass: "bg-accent/20 text-accent-dark border border-accent/30",
+      valueClass: "text-accent-dark",
       cardAccentClass: "",
     };
   }
 
   return {
     label: "LIMITADA",
-    chipClass: "bg-red-50 text-red-600 border border-red-100",
-    valueClass: "text-[#e11d48]",
-    cardAccentClass: "border-l-4 border-l-[#e11d48]",
+    chipClass: "bg-red-50 text-red-600 border border-red-200",
+    valueClass: "text-red-600",
+    cardAccentClass: "border-l-4 border-l-red-500",
   };
 }
 
@@ -37,10 +37,10 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
   return (
     <section className="space-y-6">
       <header className="flex items-center gap-3 px-2 mb-1">
-        <div className="w-10 h-10 rounded-xl bg-[#006837] flex items-center justify-center text-white">
+        <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-white shadow-md">
           <span className="material-symbols-outlined">calendar_month</span>
         </div>
-        <h2 className="text-xl font-extrabold text-[#006837] uppercase tracking-tight font-childhood">
+        <h2 className="text-xl font-extrabold text-secondary uppercase tracking-tight font-childhood">
           {day.day}
         </h2>
       </header>
@@ -57,12 +57,12 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
           return (
             <article
               key={slot.id}
-              className={`bg-white rounded-[2rem] border border-slate-100 shadow-lg hover:shadow-2xl transition-all duration-300 p-6 group max-w-[380px] mx-auto ${cardAccentClass}`}
+              className={`bg-white rounded-2xl border border-slate-200 shadow-md hover:shadow-xl hover:border-primary/30 transition-all duration-200 p-6 group max-w-[380px] mx-auto ${cardAccentClass}`}
             >
               <div className="flex-1 space-y-6">
                 <div className="flex justify-between items-start mb-1">
                   <div>
-                    <p className="text-3xl font-black text-[#1f4b9e] leading-none font-childhood">
+                    <p className="text-3xl font-black text-primary leading-none font-childhood">
                       {startDisplay}
                     </p>
                     <p className="text-sm font-bold text-slate-400 mt-1 font-myriad">
@@ -81,7 +81,7 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
                     <span className="text-slate-500 font-medium font-myriad">
                       Capacidad Total
                     </span>
-                    <span className="font-bold text-[#1f4b9e] whitespace-nowrap font-gothic">
+                    <span className="font-bold text-support whitespace-nowrap font-gothic">
                       {slot.capacity} alumnos
                     </span>
                   </div>
@@ -122,7 +122,7 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
 
                 <button
                   type="button"
-                  className="w-full bg-[#ffd000] hover:bg-[#e6bc00] text-[#1f4b9e] py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-yellow-200/50 transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed font-childhood"
+                  className="w-full bg-primary hover:bg-[var(--color-primary-hover)] text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-primary/30 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-400 font-childhood active:scale-95"
                   disabled={isFull}
                   onClick={() => onReserveClick(slot, day.id)}
                 >
@@ -130,7 +130,7 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
                 </button>
               </div>
               {isFull && (
-                <p className="mt-2 text-xs text-[#c53030] font-medium font-myriad">
+                <p className="mt-2 text-xs text-red-600 font-medium font-myriad">
                   Este horario ha alcanzado su capacidad máxima.
                 </p>
               )}

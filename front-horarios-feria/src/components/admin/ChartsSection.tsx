@@ -60,7 +60,7 @@ export function ChartsSection({ dayMetrics }: ChartsSectionProps) {
                     style: { textAnchor: 'middle', fill: '#6c757d' },
                   }}
                   domain={[0, 100]}
-                  stroke="#1f4b9e"
+                  stroke="#004DB1"
                 />
                 <YAxis
                   yAxisId="right"
@@ -71,7 +71,7 @@ export function ChartsSection({ dayMetrics }: ChartsSectionProps) {
                     position: 'insideRight',
                     style: { textAnchor: 'middle', fill: '#6c757d' },
                   }}
-                  stroke="#4c96cc"
+                  stroke="#A72974"
                 />
                 <Tooltip
                   contentStyle={{
@@ -96,17 +96,17 @@ export function ChartsSection({ dayMetrics }: ChartsSectionProps) {
                 <Bar
                   yAxisId="left"
                   dataKey="porcentajeEstudiantes"
-                  fill="#1f4b9e"
+                  fill="#004DB1"
                   name="Porcentaje de Estudiantes (%)"
                 />
                 <Line
                   yAxisId="right"
                   type="monotone"
                   dataKey="colegios"
-                  stroke="#4c96cc"
+                  stroke="#A72974"
                   strokeWidth={3}
                   name="Número de Colegios"
-                  dot={{ fill: '#4c96cc', r: 5 }}
+                  dot={{ fill: '#A72974', r: 5 }}
                 />
               </ComposedChart>
             </ResponsiveContainer>

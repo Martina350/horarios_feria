@@ -263,14 +263,14 @@ export function EditReservationModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-all duration-200 font-myriad"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-[#1f4b9e] text-white rounded-lg hover:bg-[#1a3d7d] disabled:opacity-50"
+              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[var(--color-primary-hover)] disabled:opacity-50 transition-all duration-200 shadow-md"
             >
               {loading ? 'Guardando...' : 'Guardar'}
             </button>

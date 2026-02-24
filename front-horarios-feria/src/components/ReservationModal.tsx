@@ -200,13 +200,13 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
         </div>
 
         <div className="modal-body">
-          <div className="mb-8 flex flex-wrap items-center gap-4 bg-slate-50 px-4 py-3 rounded-2xl border border-slate-100">
-            <div className="flex items-center gap-2 text-[#1f4b9e] font-bold text-sm font-gothic">
+          <div className="mb-8 flex flex-wrap items-center gap-4 bg-support/5 px-4 py-3 rounded-2xl border border-support/20">
+            <div className="flex items-center gap-2 text-support font-bold text-sm font-gothic">
               <span className="material-symbols-outlined">schedule</span>
               <span>{slot.time}</span>
             </div>
-            <div className="w-1 h-1 bg-slate-300 rounded-full" />
-            <div className="flex items-center gap-2 text-[#1f4b9e] font-bold text-sm font-gothic">
+            <div className="w-1 h-1 bg-support/30 rounded-full" />
+            <div className="flex items-center gap-2 text-support font-bold text-sm font-gothic">
               <span className="material-symbols-outlined">groups</span>
               <span>Cupos disponibles: {slot.available}</span>
             </div>
@@ -223,7 +223,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 value={form.amie}
                 onChange={(e) => handleChange('amie', e.target.value)}
                 placeholder="Ej: 17H00123"
-                className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#1f4b9e]/10 transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
+                className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
               />
               {fieldErrors.amie && (
                 <p className="mt-1 text-xs text-red-600 font-myriad">{fieldErrors.amie}</p>
@@ -239,7 +239,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 value={form.schoolName}
                 onChange={(e) => handleChange('schoolName', e.target.value)}
                 placeholder="Nombre completo"
-                className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#1f4b9e]/10 transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
+                className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
               />
               {fieldErrors.schoolName && (
                 <p className="mt-1 text-xs text-red-600 font-myriad">{fieldErrors.schoolName}</p>
@@ -255,7 +255,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 value={form.coordinatorName}
                 onChange={(e) => handleChange('coordinatorName', e.target.value)}
                 placeholder="Nombres y apellidos completos"
-                className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#1f4b9e]/10 transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
+                className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
               />
               {fieldErrors.coordinatorName && (
                 <p className="mt-1 text-xs text-red-600 font-myriad">{fieldErrors.coordinatorName}</p>
@@ -271,7 +271,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 value={form.email}
                 onChange={(e) => handleChange('email', e.target.value)}
                 placeholder="correo@ejemplo.com"
-                className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#1f4b9e]/10 transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
+                className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
               />
               {fieldErrors.email && (
                 <p className="mt-1 text-xs text-red-600 font-myriad">
@@ -285,7 +285,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 Número de WhatsApp
               </label>
               <div className="relative">
-                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[#1f4b9e] font-bold border-r border-slate-200 pr-3 font-gothic">
+                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-primary font-bold border-r border-slate-200 pr-3 font-gothic">
                   +593
                 </span>
                 <input
@@ -311,7 +311,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 value={form.students}
                 onChange={(e) => handleChange('students', e.target.value)}
                 placeholder="Máximo 200"
-                className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#1f4b9e]/10 transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
+                className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
               />
               {fieldErrors.students && (
                 <p className="mt-1 text-xs text-red-600 font-myriad">{fieldErrors.students}</p>
@@ -325,13 +325,13 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
             <button
               type="button"
               onClick={onClose}
-              className="w-full sm:w-auto px-6 py-3.5 text-slate-500 hover:text-[#1f4b9e] font-bold rounded-2xl transition-all font-myriad"
+              className="w-full sm:w-auto px-6 py-3.5 text-slate-500 hover:text-primary font-bold rounded-2xl transition-all duration-200 font-myriad"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="w-full sm:w-auto px-10 py-3.5 bg-[#ffd000] text-[#1f4b9e] font-extrabold rounded-2xl shadow-xl shadow-[#ffd000]/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 border-b-4 border-black/10 text-sm uppercase font-childhood"
+              className="w-full sm:w-auto px-10 py-3.5 bg-primary text-white font-extrabold rounded-2xl shadow-xl shadow-primary/30 hover:bg-[var(--color-primary-hover)] hover:scale-[1.02] active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 text-sm uppercase font-childhood"
             >
               Reservar ahora
               <span className="material-symbols-outlined font-bold">rocket_launch</span>
@@ -339,9 +339,9 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
           </div>
         </form>
         </div>
-        <div className="px-8 py-5 bg-[#1f4b9e]/5 flex items-center gap-3 border-t border-[#1f4b9e]/10">
-          <span className="material-symbols-outlined text-[#1f4b9e]">verified_user</span>
-          <p className="text-sm text-[#1f4b9e]/80 font-medium font-myriad">
+        <div className="px-8 py-5 bg-support/5 flex items-center gap-3 border-t border-support/20">
+          <span className="material-symbols-outlined text-support">verified_user</span>
+          <p className="text-sm text-support/80 font-medium font-myriad">
             Revisa tu correo para confirmar la reserva.
           </p>
         </div>

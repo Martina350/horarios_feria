@@ -98,21 +98,21 @@ export function SchoolsTable({
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      confirmada: { bg: '#e6f7d9', text: '#2c7a1f', label: 'Confirmada' },
-      pendiente: { bg: '#fff4d2', text: '#d88700', label: 'Pendiente' },
-      cancelada: { bg: '#ffe3e3', text: '#c53030', label: 'Cancelada' },
+      confirmada: { bg: 'bg-secondary/20', text: 'text-secondary', border: 'border-secondary/30', label: 'Confirmada' },
+      pendiente: { bg: 'bg-accent/20', text: 'text-accent-dark', border: 'border-accent/30', label: 'Pendiente' },
+      cancelada: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-200', label: 'Cancelada' },
     };
 
     const config = statusConfig[status as keyof typeof statusConfig] || {
-      bg: '#f8f9fa',
-      text: '#6c757d',
+      bg: 'bg-slate-100',
+      text: 'text-slate-600',
+      border: 'border-slate-200',
       label: status,
     };
 
     return (
       <span
-        className="px-2 py-1 rounded-full text-xs font-medium"
-        style={{ backgroundColor: config.bg, color: config.text }}
+        className={`px-2 py-1 rounded-full text-xs font-medium border ${config.bg} ${config.text} ${config.border}`}
       >
         {config.label}
       </span>
@@ -120,7 +120,7 @@ export function SchoolsTable({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+    <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <h3 className="text-xl font-bold font-gothic" style={{ color: '#2c3e50' }}>
           Tabla de Colegios Inscritos
@@ -128,7 +128,7 @@ export function SchoolsTable({
         <div className="flex gap-2">
           <button
             onClick={handleExportExcel}
-            className="px-4 py-2 bg-[#1f4b9e] text-white rounded-lg hover:bg-[#1a3d7d] transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[var(--color-primary-hover)] transition-all duration-200 flex items-center gap-2 shadow-md"
           >
             <span className="material-symbols-outlined">download</span>
             <span className="font-gothic">Exportar Excel</span>
@@ -146,7 +146,7 @@ export function SchoolsTable({
             setSearchTerm(e.target.value);
             setCurrentPage(1);
           }}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1f4b9e] font-myriad"
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 font-myriad"
         />
       </div>
 
@@ -154,9 +154,9 @@ export function SchoolsTable({
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-200">
+            <tr className="border-b border-slate-200 bg-primary/5">
               <th
-                className="px-4 py-3 text-left cursor-pointer hover:bg-gray-50"
+                className="px-4 py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary"
                 onClick={() => handleSort('amie')}
               >
                 AMIE
@@ -167,7 +167,7 @@ export function SchoolsTable({
                 )}
               </th>
               <th
-                className="px-4 py-3 text-left cursor-pointer hover:bg-gray-50"
+                className="px-4 py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary"
                 onClick={() => handleSort('schoolName')}
               >
                 Colegio
@@ -181,7 +181,7 @@ export function SchoolsTable({
               <th className="px-4 py-3 text-left">Email</th>
               <th className="px-4 py-3 text-left">WhatsApp</th>
               <th
-                className="px-4 py-3 text-left cursor-pointer hover:bg-gray-50"
+                className="px-4 py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary"
                 onClick={() => handleSort('students')}
               >
                 Estudiantes
@@ -195,7 +195,7 @@ export function SchoolsTable({
               <th className="px-4 py-3 text-left">Horario</th>
               <th className="px-4 py-3 text-left">Estado</th>
               <th
-                className="px-4 py-3 text-left cursor-pointer hover:bg-gray-50"
+                className="px-4 py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary"
                 onClick={() => handleSort('timestamp')}
               >
                 Fecha
@@ -219,7 +219,7 @@ export function SchoolsTable({
               paginatedReservations.map((reservation) => (
                 <tr
                   key={reservation.id}
-                  className="border-b border-gray-100 hover:bg-gray-50"
+                  className="border-b border-slate-100 hover:bg-support/5 transition-colors duration-200"
                 >
                   <td className="px-4 py-3 font-mono text-sm">{reservation.amie}</td>
                   <td className="px-4 py-3">{reservation.schoolName}</td>
@@ -243,7 +243,7 @@ export function SchoolsTable({
                     <div className="flex gap-2">
                       <button
                         onClick={() => onEdit(reservation)}
-                        className="p-1 text-[#1f4b9e] hover:bg-[#1f4b9e]/10 rounded transition-colors"
+                        className="p-1 text-primary hover:bg-primary/10 rounded transition-all duration-200"
                         title="Editar"
                       >
                         <span className="material-symbols-outlined text-lg">
@@ -279,7 +279,7 @@ export function SchoolsTable({
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-4 py-2 border border-slate-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-support/5 transition-all duration-200 font-myriad"
             >
               Anterior
             </button>
@@ -289,7 +289,7 @@ export function SchoolsTable({
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-4 py-2 border border-slate-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-support/5 transition-all duration-200 font-myriad"
             >
               Siguiente
             </button>
