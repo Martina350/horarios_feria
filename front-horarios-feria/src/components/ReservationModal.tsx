@@ -1,12 +1,21 @@
-import type { SchoolReservation, TimeSlot } from '../data/eventData'
+import type { TimeSlot } from '../data/eventData'
 import { useEffect, useState } from 'react'
+
+type CreateReservationData = {
+  amie: string
+  schoolName: string
+  coordinatorName: string
+  email: string
+  whatsapp: string
+  students: number
+}
 
 type ReservationModalProps = {
   isOpen: boolean
   slot: TimeSlot | null
   dayId: string | null
   onClose: () => void
-  onConfirm: (values: SchoolReservation) => void
+  onConfirm: (values: CreateReservationData) => Promise<void>
 }
 
 type FormState = {

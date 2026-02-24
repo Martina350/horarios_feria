@@ -191,8 +191,6 @@ export function calculateAlerts(days: EventDay[]) {
   days.forEach((day) => {
     day.slots.forEach((slot) => {
       const occupied = slot.capacity - slot.available
-      const occupancyRate =
-        slot.capacity > 0 ? (occupied / slot.capacity) * 100 : 0
 
       // Horario completamente lleno
       if (slot.available === 0) {

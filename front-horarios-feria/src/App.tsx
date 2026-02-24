@@ -8,8 +8,6 @@ import { AdminDashboard } from "./components/admin/AdminDashboard";
 import { LoginPage } from "./components/admin/LoginPage";
 import { useAuth } from "./contexts/AuthContext";
 import type { TimeSlot } from "./data/eventData";
-import sepsLogo from "./assets/logoseps.png";
-import michiLogo from "./assets/logomichi.png";
 import fondo from "./assets/fondo-GMW.png";
 import logoGMW from "./assets/Logo-GMW-magenta.png";
 

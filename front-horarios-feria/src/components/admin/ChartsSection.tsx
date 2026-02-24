@@ -79,7 +79,7 @@ export function ChartsSection({ dayMetrics }: ChartsSectionProps) {
                     border: '1px solid #e9ecef',
                     borderRadius: '8px',
                   }}
-                  formatter={(value: any, name: string) => {
+                  formatter={(value: any, name?: string) => {
                     if (name === 'porcentajeEstudiantes') {
                       return [`${value}%`, 'Porcentaje de Estudiantes'];
                     }
@@ -89,7 +89,7 @@ export function ChartsSection({ dayMetrics }: ChartsSectionProps) {
                     if (name === 'estudiantes') {
                       return [value, 'Total Estudiantes'];
                     }
-                    return [value, name];
+                    return [value, name || ''];
                   }}
                 />
                 <Legend />
