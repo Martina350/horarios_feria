@@ -12,6 +12,7 @@ export class EventsService {
    */
   async getDaysWithSlots(): Promise<EventDayDto[]> {
     try {
+      console.log('Iniciando consulta de eventos...');
       const events = await this.prisma.event.findMany({
         include: {
           timeSlots: {
@@ -34,6 +35,8 @@ export class EventsService {
         },
       });
 
+      console.log(`Se encontraron ${events?.length || 0} eventos`);
+      
       if (!events || events.length === 0) {
         console.warn('No se encontraron eventos en la base de datos');
         return [];

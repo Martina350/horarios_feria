@@ -3,7 +3,7 @@ services:
     name: back-horarios-feria
     env: node
     buildCommand: cd back-horarios-feria && npm install --include=dev && npx prisma generate && npm run build
-    startCommand: cd back-horarios-feria && npm run start:prod
+    startCommand: cd back-horarios-feria && npx prisma migrate deploy && npm run start:prod
     envVars:
       - key: NODE_ENV
         value: production
