@@ -10,7 +10,7 @@ import { useAuth } from "./contexts/AuthContext";
 import type { TimeSlot } from "./data/eventData";
 import sepsLogo from "./assets/logoseps.png";
 import michiLogo from "./assets/logomichi.png";
-import ososferia from "./assets/ososferia.png";
+import fondo from "./assets/fondo-GMW.png";
 
 /**
  * Componente para la vista pública
@@ -103,8 +103,8 @@ function PublicView() {
     <div className="relative min-h-screen">
       {/* Fondo decorativo */}
       <div
-        className="fixed inset-0 z-0 bg-center bg-no-repeat bg-contain opacity-[0.17] pointer-events-none"
-        style={{ backgroundImage: `url(${ososferia})` }}
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.55] pointer-events-none"
+        style={{ backgroundImage: `url(${fondo})` }}
         aria-hidden="true"
       />
       <div className="relative z-10 flex flex-col min-h-screen">
