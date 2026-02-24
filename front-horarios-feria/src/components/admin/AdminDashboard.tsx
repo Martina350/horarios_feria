@@ -101,7 +101,7 @@ export function AdminDashboard() {
                 <span className="material-symbols-outlined">arrow_back</span>
               </button>
               <div>
-                <h1 className="text-2xl font-bold font-childhood">Panel de Administración</h1>
+                <h1 className="text-2xl font-bold font-childhood uppercase">Panel de Administración</h1>
                 <p className="text-sm text-white/80 font-myriad">Global Money Week - Gestión de Reservas</p>
               </div>
             </div>

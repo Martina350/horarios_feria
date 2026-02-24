@@ -11,7 +11,7 @@ import type { TimeSlot } from "./data/eventData";
 import sepsLogo from "./assets/logoseps.png";
 import michiLogo from "./assets/logomichi.png";
 import fondo from "./assets/fondo-GMW.png";
-import logoGMW from "./assets/Logo-GMW-verde.png";
+import logoGMW from "./assets/Logo-GMW-magenta.png";
 
 /**
  * Componente para la vista pública
