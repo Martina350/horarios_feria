@@ -9,7 +9,7 @@ export const eventsService = {
    * Obtiene todos los días con sus horarios disponibles
    */
   async getDays(): Promise<EventDayResponse[]> {
-    const response = await api.get<EventDayResponse[]>('/api/events/days');
+    const response = await api.get<EventDayResponse[]>('/events/days');
     return response.data;
   },
 };

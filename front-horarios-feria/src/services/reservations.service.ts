@@ -13,7 +13,7 @@ export const reservationsService = {
    * Crea una nueva reserva (público)
    */
   async create(dto: CreateReservationDto): Promise<ReservationResponse> {
-    const response = await api.post<ReservationResponse>('/api/reservations', dto);
+    const response = await api.post<ReservationResponse>('/reservations', dto);
     return response.data;
   },
 
@@ -33,7 +33,7 @@ export const reservationsService = {
     if (filters?.amie) params.append('amie', filters.amie);
 
     const response = await api.get<ReservationResponse[]>(
-      `/api/reservations?${params.toString()}`
+      `/reservations?${params.toString()}`
     );
     return response.data;
   },
@@ -42,7 +42,7 @@ export const reservationsService = {
    * Obtiene una reserva por ID (admin)
    */
   async findOne(id: string): Promise<ReservationResponse> {
-    const response = await api.get<ReservationResponse>(`/api/reservations/${id}`);
+    const response = await api.get<ReservationResponse>(`/reservations/${id}`);
     return response.data;
   },
 
@@ -54,7 +54,7 @@ export const reservationsService = {
     dto: UpdateReservationDto
   ): Promise<ReservationResponse> {
     const response = await api.patch<ReservationResponse>(
-      `/api/reservations/${id}`,
+      `/reservations/${id}`,
       dto
     );
     return response.data;
@@ -64,6 +64,6 @@ export const reservationsService = {
    * Elimina una reserva (admin)
    */
   async remove(id: string): Promise<void> {
-    await api.delete(`/api/reservations/${id}`);
+    await api.delete(`/reservations/${id}`);
   },
 };

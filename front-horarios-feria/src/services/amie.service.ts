@@ -9,7 +9,7 @@ export const amieService = {
    * Consulta un código AMIE y retorna el nombre del colegio
    */
   async getSchoolByAmie(code: string): Promise<AmieResponse> {
-    const response = await api.get<AmieResponse>(`/api/amie/${code}`);
+    const response = await api.get<AmieResponse>(`/amie/${code}`);
     return response.data;
   },
 };

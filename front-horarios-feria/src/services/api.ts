@@ -1,6 +1,21 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+// En producción, no usar localhost
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) return envUrl;
+  
+  // Si estamos en producción y no hay variable, mostrar error
+  if (import.meta.env.PROD) {
+    console.error('VITE_API_URL no está configurada en producción');
+    return ''; // Esto causará un error visible
+  }
+  
+  // Solo en desarrollo usar localhost
+  return 'http://localhost:3000/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 /**
  * Instancia de axios configurada con la URL base

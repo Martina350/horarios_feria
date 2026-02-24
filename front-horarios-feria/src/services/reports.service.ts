@@ -23,7 +23,7 @@ export const reportsService = {
     if (filters?.status) params.append('status', filters.status);
     if (filters?.amie) params.append('amie', filters.amie);
 
-    const response = await api.get(`/api/reports/export?${params.toString()}`, {
+    const response = await api.get(`/reports/export?${params.toString()}`, {
       responseType: 'blob',
     });
 

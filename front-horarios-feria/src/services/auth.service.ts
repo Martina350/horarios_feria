@@ -9,7 +9,7 @@ export const authService = {
    * Inicia sesión y retorna el token
    */
   async login(dto: LoginDto): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>('/auth/login', dto);
+    const response = await api.post<LoginResponse>('/api/auth/login', dto);
     return response.data;
   },
 
