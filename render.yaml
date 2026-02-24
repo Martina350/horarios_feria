@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: back-horarios-feria
+    env: node
+    buildCommand: cd back-horarios-feria && npm install --include=dev && npx prisma generate && npm run build
+    startCommand: cd back-horarios-feria && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
