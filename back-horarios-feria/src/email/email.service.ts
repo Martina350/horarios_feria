@@ -33,10 +33,16 @@ export class EmailService {
     students: number;
     reservationId: string;
   }): Promise<void> {
+    const toEmail = data.email.trim().toLowerCase();
+    if (!toEmail) {
+      this.logger.warn('Email de destino vacío, no se envía confirmación');
+      return;
+    }
+
     // Si no hay cliente Resend configurado, solo loguear
     if (!this.resend) {
       this.logger.warn(
-        `Email no enviado (RESEND_API_KEY no configurada) para reserva ${data.reservationId} a ${data.email}`,
+        `Email no enviado (RESEND_API_KEY no configurada) para reserva ${data.reservationId} a ${toEmail}`,
       );
       return;
     }
@@ -80,15 +86,15 @@ export class EmailService {
 
       await this.resend.emails.send({
         from: `${fromName} <${fromEmail}>`,
-        to: data.email,
+        to: toEmail,
         subject: 'Confirmación de Reserva - Global Money Week',
         html,
       });
 
-      this.logger.log(`Email de confirmación enviado a ${data.email}`);
+      this.logger.log(`Email de confirmación enviado a ${toEmail}`);
     } catch (error) {
       this.logger.error(
-        `Error al enviar email de confirmación a ${data.email}:`,
+        `Error al enviar email de confirmación a ${toEmail}:`,
         error,
       );
       throw error;

@@ -120,7 +120,7 @@ export class ReservationsService {
             schoolName: dto.schoolName,
             coordinatorName: dto.coordinatorName,
             coordinatorLastName: dto.coordinatorLastName,
-            email: dto.email.toLowerCase(),
+            email: dto.email.trim().toLowerCase(),
             whatsapp: dto.whatsapp,
             students: dto.students,
             dayId: dto.dayId,

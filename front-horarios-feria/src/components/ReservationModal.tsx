@@ -38,16 +38,25 @@ const emptyForm: FormState = {
   students: '',
 }
 
+const LIMITS = {
+  email: 255,
+  schoolName: 200,
+  coordinatorName: 100,
+  studentsMax: 200,
+} as const
+
 export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: ReservationModalProps) {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [showSuccess, setShowSuccess] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
       setForm(emptyForm)
       setError(null)
       setFieldErrors({})
+      setShowSuccess(false)
     }
   }, [isOpen])
 
@@ -73,13 +82,24 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
     }
 
     if (field === 'coordinatorName') {
-      // Máximo 100 caracteres para nombres y apellidos completos
-      value = value.slice(0, 100)
+      value = value.slice(0, LIMITS.coordinatorName)
+    }
+
+    if (field === 'schoolName') {
+      value = value.slice(0, LIMITS.schoolName)
     }
 
     if (field === 'email') {
-      // Convertir a minúsculas y limitar longitud
-      value = value.toLowerCase().slice(0, 255)
+      value = value.toLowerCase().slice(0, LIMITS.email)
+    }
+
+    if (field === 'students') {
+      value = value.replace(/\D/g, '')
+      if (value !== '') {
+        const num = parseInt(value, 10)
+        if (num > LIMITS.studentsMax) value = String(LIMITS.studentsMax)
+        else value = value.slice(0, 3) // máx 3 dígitos (200)
+      }
     }
 
     // Limpiar error específico del campo al modificarlo
@@ -108,8 +128,11 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
 
     if (!form.schoolName.trim()) newFieldErrors.schoolName = 'El nombre del colegio es obligatorio.'
     if (!form.coordinatorName.trim()) newFieldErrors.coordinatorName = 'Los nombres y apellidos del coordinador son obligatorios.'
-    if (form.coordinatorName && form.coordinatorName.length > 100) {
-      newFieldErrors.coordinatorName = 'Los nombres y apellidos no pueden superar 100 caracteres.'
+    if (form.coordinatorName && form.coordinatorName.length > LIMITS.coordinatorName) {
+      newFieldErrors.coordinatorName = `Los nombres y apellidos no pueden superar ${LIMITS.coordinatorName} caracteres.`
+    }
+    if (form.schoolName && form.schoolName.length > LIMITS.schoolName) {
+      newFieldErrors.schoolName = `El nombre del colegio no puede superar ${LIMITS.schoolName} caracteres.`
     }
 
     const emailTrimmed = form.email.trim()
@@ -120,8 +143,8 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
       if (!emailRegex.test(emailTrimmed)) {
         newFieldErrors.email = 'Por favor ingresa un correo electrónico válido.'
       }
-      if (emailTrimmed.length > 255) {
-        newFieldErrors.email = 'El correo electrónico no puede superar 255 caracteres.'
+      if (emailTrimmed.length > LIMITS.email) {
+        newFieldErrors.email = `El correo electrónico no puede superar ${LIMITS.email} caracteres.`
       }
     }
 
@@ -140,7 +163,9 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
       newFieldErrors.students = 'El número de alumnos debe ser mayor a 0.'
     }
 
-    if (studentsNumber > slot.available) {
+    if (studentsNumber > LIMITS.studentsMax) {
+      newFieldErrors.students = `El número de alumnos no puede superar ${LIMITS.studentsMax}.`
+    } else if (studentsNumber > slot.available) {
       newFieldErrors.students =
         'El número de alumnos supera los cupos disponibles para este horario.'
     }
@@ -166,7 +191,11 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
 
     try {
       await onConfirm(reservationData)
-      onClose()
+      setShowSuccess(true)
+      // Cerrar automáticamente después de 4 segundos para que lean el mensaje
+      setTimeout(() => {
+        onClose()
+      }, 4000)
     } catch (error: any) {
       // Manejar errores del API
       const errorMessage = error?.response?.data?.message || error?.message || 'Error al crear la reserva'
@@ -209,6 +238,28 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
         </div>
 
         <div className="modal-body">
+          {showSuccess ? (
+            <div className="py-8 text-center">
+              <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-4">
+                <span className="material-symbols-outlined text-4xl text-secondary">mark_email_read</span>
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 font-gothic mb-2">¡Reserva realizada!</h3>
+              <p className="text-slate-600 font-myriad max-w-md mx-auto">
+                Por favor revisa tu correo electrónico para confirmar los detalles de tu reserva.
+              </p>
+              <p className="text-sm text-slate-500 font-myriad mt-2">
+                Este mensaje se cerrará en unos segundos.
+              </p>
+              <button
+                type="button"
+                onClick={onClose}
+                className="mt-6 px-6 py-2.5 bg-primary text-white font-gothic rounded-xl hover:opacity-90 transition-opacity"
+              >
+                Cerrar
+              </button>
+            </div>
+          ) : (
+            <>
           <div className="mb-8 flex flex-wrap items-center gap-4 bg-support/5 px-4 py-3 rounded-2xl border border-support/20">
             <div className="flex items-center gap-2 text-support font-bold text-sm font-gothic">
               <span className="material-symbols-outlined">schedule</span>
@@ -248,8 +299,12 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 value={form.schoolName}
                 onChange={(e) => handleChange('schoolName', e.target.value)}
                 placeholder="Nombre completo"
+                maxLength={LIMITS.schoolName}
                 className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
               />
+              <p className="mt-1 text-xs text-slate-400 font-myriad">
+                {form.schoolName.length}/{LIMITS.schoolName}
+              </p>
               {fieldErrors.schoolName && (
                 <p className="mt-1 text-xs text-red-600 font-myriad">{fieldErrors.schoolName}</p>
               )}
@@ -280,8 +335,12 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 value={form.email}
                 onChange={(e) => handleChange('email', e.target.value)}
                 placeholder="correo@ejemplo.com"
+                maxLength={LIMITS.email}
                 className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
               />
+              <p className="mt-1 text-xs text-slate-400 font-myriad">
+                {form.email.length}/{LIMITS.email}
+              </p>
               {fieldErrors.email && (
                 <p className="mt-1 text-xs text-red-600 font-myriad">
                   {fieldErrors.email}
@@ -317,9 +376,10 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
               <input
                 type="number"
                 min={1}
+                max={LIMITS.studentsMax}
                 value={form.students}
                 onChange={(e) => handleChange('students', e.target.value)}
-                placeholder="Máximo 200"
+                placeholder={`Máximo ${LIMITS.studentsMax}`}
                 className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
               />
               {fieldErrors.students && (
@@ -347,6 +407,8 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
             </button>
           </div>
         </form>
+            </>
+          )}
         </div>
         <div className="px-8 py-5 bg-support/5 flex items-center gap-3 border-t border-support/20">
           <span className="material-symbols-outlined text-support">verified_user</span>
