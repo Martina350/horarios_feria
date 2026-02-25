@@ -72,9 +72,8 @@ export class EmailService {
         reservationId: data.reservationId,
       });
 
-      // Obtener email de origen desde configuración
-      // Resend requiere que el dominio esté verificado en su plataforma
-      // Prioridad: FROM_EMAIL > RESEND_FROM > SMTP_FROM
+      // Obtener email de origen. Resend exige dominio verificado en resend.com/domains
+      // Para pruebas usa: FROM_EMAIL=onboarding@resend.dev (solo envíos de prueba)
       const fromEmail = this.configService.get<string>('FROM_EMAIL') || 
                        this.configService.get<string>('RESEND_FROM') || 
                        this.configService.get<string>('SMTP_FROM');
@@ -84,14 +83,26 @@ export class EmailService {
         throw new Error('FROM_EMAIL, RESEND_FROM o SMTP_FROM debe estar configurado en las variables de entorno');
       }
 
-      await this.resend.emails.send({
+      // Resend no lanza excepciones; devuelve { data, error }
+      const result = await this.resend.emails.send({
         from: `${fromName} <${fromEmail}>`,
         to: toEmail,
         subject: 'Confirmación de Reserva - Global Money Week',
         html,
       });
 
-      this.logger.log(`Email de confirmación enviado a ${toEmail}`);
+      if (result.error) {
+        this.logger.error(
+          `Resend rechazó el envío a ${toEmail}:`,
+          result.error.message || result.error,
+        );
+        throw new Error(result.error.message || 'Error al enviar el correo');
+      }
+
+      this.logger.log(
+        `Email de confirmación enviado a ${toEmail} (id: ${result.data?.id ?? 'N/A'}). ` +
+        `Revisa bandeja de entrada y spam. FROM debe ser dominio verificado en Resend.`,
+      );
     } catch (error) {
       this.logger.error(
         `Error al enviar email de confirmación a ${toEmail}:`,
