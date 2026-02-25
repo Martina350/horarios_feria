@@ -105,15 +105,15 @@ export function EditReservationModal({
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2 className="text-xl font-bold">Editar Reserva</h2>
-          <button onClick={onClose} className="text-white/80 hover:text-white">
+      <div className="modal-card max-h-[95vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header shrink-0">
+          <h2 className="text-lg sm:text-xl font-bold truncate">Editar Reserva</h2>
+          <button onClick={onClose} className="text-white/80 hover:text-white p-1" aria-label="Cerrar">
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="modal-body space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Código AMIE</label>
             <input
@@ -259,18 +259,18 @@ export function EditReservationModal({
             </select>
           </div>
 
-          <div className="flex gap-2 justify-end pt-4">
+          <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end pt-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-all duration-200 font-myriad"
+              className="w-full sm:w-auto px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-all duration-200 font-myriad"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[var(--color-primary-hover)] disabled:opacity-50 transition-all duration-200 shadow-md"
+              className="w-full sm:w-auto px-4 py-2 bg-primary text-white rounded-lg hover:bg-[var(--color-primary-hover)] disabled:opacity-50 transition-all duration-200 shadow-md"
             >
               {loading ? 'Guardando...' : 'Guardar'}
             </button>

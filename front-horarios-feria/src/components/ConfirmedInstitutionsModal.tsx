@@ -50,7 +50,7 @@ export function ConfirmedInstitutionsModal({
       aria-labelledby="confirmed-institutions-title"
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] flex flex-col animate-[scaleIn_0.25s_ease-out]"
+        className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] flex flex-col animate-[scaleIn_0.25s_ease-out] mx-2"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-6 border-b border-slate-100">

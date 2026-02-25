@@ -92,7 +92,7 @@ export function ReservationConfirmToast() {
     >
       <div
         className={`
-          pointer-events-auto max-w-md w-full rounded-2xl shadow-2xl p-6 text-center
+          pointer-events-auto max-w-md w-full rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 text-center mx-2
           animate-[fadeSlide_0.4s_ease-out]
           ${isSuccess ? "bg-white border-2 border-secondary" : "bg-white border-2 border-red-400"}
         `}

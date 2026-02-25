@@ -67,7 +67,7 @@
 
 @layer components {
   .container-page {
-    @apply max-w-6xl mx-auto px-4 py-8;
+    @apply max-w-6xl mx-auto px-3 py-5 sm:px-4 sm:py-6 md:py-8;
   }
 
   .card-day {
@@ -88,15 +88,15 @@
   }
 
   .modal-backdrop {
-    @apply fixed inset-0 bg-primary/30 backdrop-blur-sm flex items-center justify-center z-50 px-4;
+    @apply fixed inset-0 bg-primary/30 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4 overflow-y-auto;
   }
 
   .modal-card {
-    @apply w-full max-w-2xl rounded-3xl overflow-hidden shadow-[0_24px_70px_rgba(167,41,116,0.15)] bg-white;
+    @apply w-full max-w-2xl rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_24px_70px_rgba(167,41,116,0.15)] bg-white my-auto max-h-[95vh] flex flex-col;
   }
 
   .modal-header {
-    @apply bg-primary/90 text-white px-6 md:px-8 py-4 flex items-center justify-between gap-4;
+    @apply bg-primary/90 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 flex items-center justify-between gap-3 shrink-0;
   }
 
   .modal-header-title {
@@ -108,7 +108,7 @@
   }
 
   .modal-body {
-    @apply px-6 md:px-8 py-6 md:py-7 bg-slate-50;
+    @apply px-4 sm:px-6 md:px-8 py-4 sm:py-6 md:py-7 bg-slate-50 overflow-y-auto flex-1 min-h-0;
   }
 
   .font-childhood {

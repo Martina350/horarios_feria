@@ -58,7 +58,7 @@ export function DayCard({ day, onReserveClick, onShowConfirmedClick }: DayCardPr
           return (
             <article
               key={slot.id}
-              className={`bg-white rounded-2xl border border-slate-200 shadow-md hover:shadow-xl hover:border-primary/30 transition-all duration-200 p-6 group max-w-[380px] mx-auto ${cardAccentClass}`}
+              className={`bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-md hover:shadow-xl hover:border-primary/30 transition-all duration-200 p-4 sm:p-6 group w-full max-w-[380px] mx-auto ${cardAccentClass}`}
             >
               <div className="flex-1 space-y-6">
                 <div className="flex justify-between items-start mb-1">

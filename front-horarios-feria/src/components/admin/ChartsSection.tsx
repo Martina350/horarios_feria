@@ -39,15 +39,16 @@ export function ChartsSection({ dayMetrics }: ChartsSectionProps) {
           Gráficos y Análisis
         </h3>
 
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
           <div
-            className="rounded-2xl p-6 shadow-lg border"
+            className="rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg border overflow-x-auto"
             style={{ backgroundColor: '#ffffff', borderColor: '#e9ecef' }}
           >
-            <h4 className="text-lg font-bold mb-4" style={{ color: '#2c3e50' }}>
+            <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4" style={{ color: '#2c3e50' }}>
               Estudiantes y Colegios Inscritos por Día
             </h4>
-            <ResponsiveContainer width="100%" height={400}>
+            <div className="w-full min-h-[260px] sm:min-h-[320px]">
+            <ResponsiveContainer width="100%" height={260}>
               <ComposedChart data={combinedData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e9ecef" />
                 <XAxis dataKey="día" stroke="#6c757d" />
@@ -110,6 +111,7 @@ export function ChartsSection({ dayMetrics }: ChartsSectionProps) {
                 />
               </ComposedChart>
             </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </div>

@@ -120,24 +120,24 @@ export function SchoolsTable({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <h3 className="text-xl font-bold font-gothic" style={{ color: '#2c3e50' }}>
+    <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
+        <h3 className="text-lg sm:text-xl font-bold font-gothic" style={{ color: '#2c3e50' }}>
           Tabla de Colegios Inscritos
         </h3>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full sm:w-auto">
           <button
             onClick={handleExportExcel}
-            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[var(--color-primary-hover)] transition-all duration-200 flex items-center gap-2 shadow-md"
+            className="flex-1 sm:flex-none px-3 py-2 sm:px-4 bg-primary text-white rounded-lg hover:bg-[var(--color-primary-hover)] transition-all duration-200 flex items-center justify-center gap-2 shadow-md text-sm"
           >
-            <span className="material-symbols-outlined">download</span>
+            <span className="material-symbols-outlined text-lg">download</span>
             <span className="font-gothic">Exportar Excel</span>
           </button>
         </div>
       </div>
 
       {/* Búsqueda */}
-      <div className="mb-4">
+      <div className="mb-3 sm:mb-4">
         <input
           type="text"
           placeholder="Buscar por AMIE, colegio, email..."
@@ -151,12 +151,12 @@ export function SchoolsTable({
       </div>
 
       {/* Tabla */}
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div className="overflow-x-auto -mx-4 sm:mx-0 rounded-lg border border-slate-200">
+        <table className="w-full min-w-[900px]">
           <thead>
             <tr className="border-b border-slate-200 bg-primary/5">
               <th
-                className="px-4 py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary"
+                className="px-2 py-2 sm:px-4 sm:py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary text-xs sm:text-sm"
                 onClick={() => handleSort('amie')}
               >
                 AMIE
@@ -167,7 +167,7 @@ export function SchoolsTable({
                 )}
               </th>
               <th
-                className="px-4 py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary"
+                className="px-2 py-2 sm:px-4 sm:py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary text-xs sm:text-sm"
                 onClick={() => handleSort('schoolName')}
               >
                 Colegio
@@ -177,11 +177,11 @@ export function SchoolsTable({
                   </span>
                 )}
               </th>
-              <th className="px-4 py-3 text-left">Coordinador</th>
-              <th className="px-4 py-3 text-left">Email</th>
-              <th className="px-4 py-3 text-left">WhatsApp</th>
+              <th className="px-2 py-2 sm:px-4 sm:py-3 text-left text-xs sm:text-sm">Coordinador</th>
+              <th className="px-2 py-2 sm:px-4 sm:py-3 text-left text-xs sm:text-sm">Email</th>
+              <th className="px-2 py-2 sm:px-4 sm:py-3 text-left text-xs sm:text-sm">WhatsApp</th>
               <th
-                className="px-4 py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary"
+                className="px-2 py-2 sm:px-4 sm:py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary text-xs sm:text-sm"
                 onClick={() => handleSort('students')}
               >
                 Estudiantes
@@ -191,11 +191,11 @@ export function SchoolsTable({
                   </span>
                 )}
               </th>
-              <th className="px-4 py-3 text-left">Día</th>
-              <th className="px-4 py-3 text-left">Horario</th>
-              <th className="px-4 py-3 text-left">Estado</th>
+              <th className="px-2 py-2 sm:px-4 sm:py-3 text-left text-xs sm:text-sm">Día</th>
+              <th className="px-2 py-2 sm:px-4 sm:py-3 text-left text-xs sm:text-sm">Horario</th>
+              <th className="px-2 py-2 sm:px-4 sm:py-3 text-left text-xs sm:text-sm">Estado</th>
               <th
-                className="px-4 py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary"
+                className="px-2 py-2 sm:px-4 sm:py-3 text-left cursor-pointer hover:bg-primary/10 transition-colors duration-200 font-gothic text-primary text-xs sm:text-sm"
                 onClick={() => handleSort('timestamp')}
               >
                 Fecha
@@ -205,7 +205,7 @@ export function SchoolsTable({
                   </span>
                 )}
               </th>
-              <th className="px-4 py-3 text-left">Acciones</th>
+              <th className="px-2 py-2 sm:px-4 sm:py-3 text-left text-xs sm:text-sm">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -221,26 +221,26 @@ export function SchoolsTable({
                   key={reservation.id}
                   className="border-b border-slate-100 hover:bg-support/5 transition-colors duration-200"
                 >
-                  <td className="px-4 py-3 font-mono text-sm">{reservation.amie}</td>
-                  <td className="px-4 py-3">{reservation.schoolName}</td>
-                  <td className="px-4 py-3">{reservation.coordinatorName}</td>
-                  <td className="px-4 py-3 text-sm">{reservation.email}</td>
-                  <td className="px-4 py-3 font-mono text-sm">
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 font-mono text-xs sm:text-sm">{reservation.amie}</td>
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm max-w-[120px] sm:max-w-none truncate" title={reservation.schoolName}>{reservation.schoolName}</td>
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm max-w-[100px] sm:max-w-none truncate" title={reservation.coordinatorName}>{reservation.coordinatorName}</td>
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm max-w-[100px] sm:max-w-[140px] truncate" title={reservation.email}>{reservation.email}</td>
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 font-mono text-xs sm:text-sm">
                     {reservation.whatsapp}
                   </td>
-                  <td className="px-4 py-3 font-semibold">
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-xs sm:text-sm">
                     {reservation.students}
                   </td>
-                  <td className="px-4 py-3 text-sm">{reservation.dayId}</td>
-                  <td className="px-4 py-3 text-sm">{reservation.slotId}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm">{reservation.dayId}</td>
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm">{reservation.slotId}</td>
+                  <td className="px-2 py-2 sm:px-4 sm:py-3">
                     {getStatusBadge(reservation.status)}
                   </td>
-                  <td className="px-4 py-3 text-sm">
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm">
                     {new Date(reservation.timestamp).toLocaleDateString('es-ES')}
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
+                  <td className="px-2 py-2 sm:px-4 sm:py-3">
+                    <div className="flex gap-1 sm:gap-2">
                       <button
                         onClick={() => onEdit(reservation)}
                         className="p-1 text-primary hover:bg-primary/10 rounded transition-all duration-200"
@@ -270,26 +270,26 @@ export function SchoolsTable({
 
       {/* Paginación */}
       {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-between">
-          <p className="text-sm text-gray-600">
+        <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <p className="text-xs sm:text-sm text-gray-600 order-2 sm:order-1 text-center sm:text-left">
             Mostrando {paginatedReservations.length} de {filteredAndSorted.length}{' '}
             reservas
           </p>
-          <div className="flex gap-2">
+          <div className="flex items-center justify-center gap-2 order-1 sm:order-2">
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 border border-slate-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-support/5 transition-all duration-200 font-myriad"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 border border-slate-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-support/5 transition-all duration-200 font-myriad text-sm"
             >
               Anterior
             </button>
-            <span className="px-4 py-2">
-              Página {currentPage} de {totalPages}
+            <span className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+              {currentPage} / {totalPages}
             </span>
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="px-4 py-2 border border-slate-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-support/5 transition-all duration-200 font-myriad"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 border border-slate-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-support/5 transition-all duration-200 font-myriad text-sm"
             >
               Siguiente
             </button>

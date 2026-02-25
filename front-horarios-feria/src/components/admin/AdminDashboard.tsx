@@ -90,32 +90,32 @@ export function AdminDashboard() {
     <div className="min-h-screen" style={{ backgroundColor: '#f8f9fa' }}>
       {/* Header */}
       <header className="bg-primary text-white shadow-lg">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="max-w-6xl mx-auto px-3 py-3 sm:px-4 sm:py-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
               <button
                 onClick={() => navigate('/')}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors shrink-0"
                 title="Volver a vista pública"
               >
                 <span className="material-symbols-outlined">arrow_back</span>
               </button>
-              <div>
-                <h1 className="text-2xl font-bold font-childhood uppercase">Panel de Administración</h1>
-                <p className="text-sm text-white/80 font-myriad">Global Money Week - Gestión de Reservas</p>
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold font-childhood uppercase truncate">Panel de Administración</h1>
+                <p className="text-xs sm:text-sm text-white/80 font-myriad truncate">Global Money Week - Gestión de Reservas</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 shrink-0">
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-2"
+                className="px-3 py-2 sm:px-4 bg-white/10 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-2 text-sm"
               >
-                <span className="material-symbols-outlined">logout</span>
-                <span className="font-myriad">Cerrar sesión</span>
+                <span className="material-symbols-outlined text-lg">logout</span>
+                <span className="font-myriad hidden sm:inline">Cerrar sesión</span>
               </button>
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined">admin_panel_settings</span>
-                <span className="font-medium font-gothic">Admin</span>
+              <div className="flex items-center gap-2 text-white/90">
+                <span className="material-symbols-outlined text-lg">admin_panel_settings</span>
+                <span className="font-medium font-gothic text-sm sm:text-base">Admin</span>
               </div>
             </div>
           </div>
@@ -123,7 +123,7 @@ export function AdminDashboard() {
       </header>
 
       {/* Contenido */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="max-w-6xl mx-auto px-3 py-5 sm:px-4 sm:py-6 md:py-8">
         {/* Métricas generales */}
         <MetricsCards metrics={convertedMetrics} />
 
