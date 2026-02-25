@@ -50,6 +50,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showToast, setShowToast] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
@@ -57,8 +58,16 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
       setError(null)
       setFieldErrors({})
       setShowSuccess(false)
+      setShowToast(false)
     }
   }, [isOpen])
+
+  // Toast de "revisa tu correo" se oculta solo después de 5 s
+  useEffect(() => {
+    if (!showToast) return
+    const t = setTimeout(() => setShowToast(false), 5000)
+    return () => clearTimeout(t)
+  }, [showToast])
 
   if (!isOpen || !slot || !dayId) return null
 
@@ -192,6 +201,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
     try {
       await onConfirm(reservationData)
       setShowSuccess(true)
+      setShowToast(true)
       // Cerrar automáticamente después de 4 segundos para que lean el mensaje
       setTimeout(() => {
         onClose()
@@ -212,6 +222,22 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
 
   return (
     <div className="modal-backdrop">
+      {showToast && (
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl bg-secondary text-white text-sm font-medium font-myriad animate-[fadeInUp_0.3s_ease-out]"
+          role="status"
+          aria-live="polite"
+        >
+          <span className="material-symbols-outlined text-white">mail</span>
+          <span>Revisa tu correo para confirmar tu asistencia.</span>
+        </div>
+      )}
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translate(-50%, 12px); }
+          to { opacity: 1; transform: translate(-50%, 0); }
+        }
+      `}</style>
       <div className="modal-card">
         <div className="modal-header">
           <div className="modal-header-title">
