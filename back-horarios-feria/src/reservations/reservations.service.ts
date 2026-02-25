@@ -5,12 +5,18 @@ import {
   ConflictException,
   Logger,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { randomBytes } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmailService } from '../email/email.service';
 import { EventsService } from '../events/events.service';
+import { Prisma } from '@prisma/client';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationResponseDto } from './dto/reservation-response.dto';
+
+/** Tiempo de validez del token de confirmación (24 horas) */
+const CONFIRMATION_TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
 
 @Injectable()
 export class ReservationsService {
@@ -20,6 +26,7 @@ export class ReservationsService {
     private prisma: PrismaService,
     private emailService: EmailService,
     private eventsService: EventsService,
+    private configService: ConfigService,
   ) {}
 
   /**
@@ -113,7 +120,10 @@ export class ReservationsService {
           );
         }
 
-        // Crear la reserva asociada a la escuela
+        // Token seguro para confirmación por correo (no exponer IDs internos)
+        const confirmationToken = randomBytes(32).toString('hex');
+
+        // Crear la reserva asociada a la escuela (confirmationToken/confirmedAt en schema; tipos Prisma pueden estar en caché)
         return await tx.reservation.create({
           data: {
             amie: dto.amie,
@@ -126,8 +136,9 @@ export class ReservationsService {
             dayId: dto.dayId,
             slotId: dto.slotId,
             status: 'pendiente',
+            confirmationToken,
             schoolId: school.id,
-          },
+          } as Prisma.ReservationUncheckedCreateInput,
         });
       },
       {
@@ -146,9 +157,14 @@ export class ReservationsService {
         where: { id: dto.slotId },
       });
 
-      if (eventDay && timeSlot) {
+      const reservationToken = (reservation as { confirmationToken?: string | null }).confirmationToken;
+      if (eventDay && timeSlot && reservationToken) {
         const dayFormatted = this.formatDate(eventDay.date);
         const slotFormatted = `${timeSlot.timeStart} - ${timeSlot.timeEnd}`;
+        const backendUrl = this.configService.get<string>('BACKEND_PUBLIC_URL')?.replace(/\/$/, '') || '';
+        const confirmLink = backendUrl
+          ? `${backendUrl}/api/reservations/confirm?token=${encodeURIComponent(reservationToken)}`
+          : '';
 
         await this.emailService.sendReservationConfirmation({
           email: reservation.email,
@@ -158,6 +174,7 @@ export class ReservationsService {
           slot: slotFormatted,
           students: reservation.students,
           reservationId: reservation.id,
+          confirmLink,
         });
         emailSent = true;
       }
@@ -181,11 +198,65 @@ export class ReservationsService {
       dayId: reservation.dayId,
       slotId: reservation.slotId,
       status: reservation.status,
+      confirmedAt: (reservation as { confirmedAt?: Date | null }).confirmedAt ?? undefined,
       timestamp: reservation.timestamp,
       createdAt: reservation.createdAt,
       updatedAt: reservation.updatedAt,
       emailSent,
     };
+  }
+
+  /**
+   * Confirma una reserva por token (enlace del correo).
+   * Valida token, evita doble confirmación, opcionalmente expira en 24h.
+   * Retorna la URL a la que debe redirigir (frontend con ?confirmed=true o ?confirmed=error).
+   */
+  async confirmByToken(token: string | undefined): Promise<{ redirectUrl: string }> {
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL')?.replace(/\/$/, '') || '';
+    const baseRedirect = frontendUrl || '/';
+
+    if (!token || typeof token !== 'string' || token.trim().length === 0) {
+      this.logger.warn('Confirmación rechazada: token vacío o inválido');
+      return { redirectUrl: `${baseRedirect}?confirmed=error` };
+    }
+
+    const reservation = await this.prisma.reservation.findUnique({
+      where: { confirmationToken: token.trim() } as unknown as Prisma.ReservationWhereUniqueInput,
+    });
+
+    if (!reservation) {
+      this.logger.warn('Confirmación rechazada: token no encontrado');
+      return { redirectUrl: `${baseRedirect}?confirmed=error` };
+    }
+
+    if (reservation.status === 'confirmada') {
+      this.logger.log(`Reserva ya confirmada (token reutilizado): ${reservation.id}`);
+      return { redirectUrl: `${baseRedirect}?confirmed=true` };
+    }
+
+    if (reservation.status === 'cancelada') {
+      this.logger.warn(`Confirmación rechazada: reserva cancelada ${reservation.id}`);
+      return { redirectUrl: `${baseRedirect}?confirmed=error` };
+    }
+
+    const now = new Date();
+    const createdAt = new Date(reservation.createdAt);
+    if (now.getTime() - createdAt.getTime() > CONFIRMATION_TOKEN_EXPIRY_MS) {
+      this.logger.warn(`Confirmación rechazada: token expirado para reserva ${reservation.id}`);
+      return { redirectUrl: `${baseRedirect}?confirmed=error` };
+    }
+
+    await this.prisma.reservation.update({
+      where: { id: reservation.id },
+      data: {
+        status: 'confirmada',
+        confirmedAt: now,
+        confirmationToken: null, // Invalidar token (un solo uso)
+      } as Prisma.ReservationUncheckedUpdateInput,
+    });
+
+    this.logger.log(`Reserva confirmada correctamente: ${reservation.id}`);
+    return { redirectUrl: `${baseRedirect}?confirmed=true` };
   }
 
   /**
@@ -234,6 +305,7 @@ export class ReservationsService {
       dayId: r.dayId,
       slotId: r.slotId,
       status: r.status,
+      confirmedAt: (r as { confirmedAt?: Date | null }).confirmedAt ?? undefined,
       timestamp: r.timestamp,
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
@@ -264,6 +336,7 @@ export class ReservationsService {
       dayId: reservation.dayId,
       slotId: reservation.slotId,
       status: reservation.status,
+      confirmedAt: (reservation as { confirmedAt?: Date | null }).confirmedAt ?? undefined,
       timestamp: reservation.timestamp,
       createdAt: reservation.createdAt,
       updatedAt: reservation.updatedAt,
@@ -380,6 +453,7 @@ export class ReservationsService {
       dayId: updated.dayId,
       slotId: updated.slotId,
       status: updated.status,
+      confirmedAt: (updated as { confirmedAt?: Date | null }).confirmedAt ?? undefined,
       timestamp: updated.timestamp,
       createdAt: updated.createdAt,
       updatedAt: updated.updatedAt,

@@ -10,6 +10,7 @@ export class ReservationResponseDto {
   dayId: string;
   slotId: string;
   status: string;
+  confirmedAt?: Date | null;
   timestamp: Date;
   createdAt: Date;
   updatedAt: Date;

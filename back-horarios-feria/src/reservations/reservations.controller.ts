@@ -10,7 +10,9 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
@@ -22,6 +24,18 @@ import { Roles } from '../common/decorators/roles.decorator';
 @Controller('api/reservations')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
+
+  /**
+   * Confirmar reserva por token (enlace del correo). Redirige al frontend con ?confirmed=true|error
+   */
+  @Get('confirm')
+  async confirm(
+    @Query('token') token: string | undefined,
+    @Res({ passthrough: false }) res: Response,
+  ): Promise<void> {
+    const { redirectUrl } = await this.reservationsService.confirmByToken(token);
+    res.redirect(302, redirectUrl);
+  }
 
   /**
    * Crear una nueva reserva (público)

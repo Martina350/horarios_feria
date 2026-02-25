@@ -4,6 +4,7 @@ import { useEvents } from "./hooks/useEvents";
 import { useCreateReservation } from "./hooks/useReservations";
 import { DayCard } from "./components/DayCard";
 import { ReservationModal } from "./components/ReservationModal";
+import { ReservationConfirmToast } from "./components/ReservationConfirmToast";
 import { AdminDashboard } from "./components/admin/AdminDashboard";
 import { LoginPage } from "./components/admin/LoginPage";
 import { useAuth } from "./contexts/AuthContext";
@@ -210,6 +211,7 @@ function ProtectedAdminRoute({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <BrowserRouter>
+      <ReservationConfirmToast />
       <Routes>
         <Route path="/" element={<PublicView />} />
         <Route path="/admin/login" element={<LoginPage />} />

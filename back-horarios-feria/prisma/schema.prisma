@@ -59,28 +59,31 @@ model School {
 }
 
 model Reservation {
-  id                String   @id @default(uuid())
-  amie              String
-  schoolName        String    @map("school_name")
-  coordinatorName   String    @map("coordinator_name")
-  coordinatorLastName String? @map("coordinator_last_name")
-  email             String
-  whatsapp          String
-  students          Int
-  dayId             String    @map("day_id")
-  slotId            String    @map("slot_id")
-  status            String    @default("pendiente") // pendiente | confirmada | cancelada
-  timestamp         DateTime  @default(now())
-  createdAt         DateTime  @default(now()) @map("created_at")
-  updatedAt         DateTime  @updatedAt @map("updated_at")
-  schoolId          String?   @map("school_id")
-  slot              TimeSlot  @relation(fields: [slotId], references: [id], onDelete: Cascade)
-  school            School?   @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  id                  String    @id @default(uuid())
+  amie                String
+  schoolName          String    @map("school_name")
+  coordinatorName     String    @map("coordinator_name")
+  coordinatorLastName String?   @map("coordinator_last_name")
+  email               String
+  whatsapp            String
+  students            Int
+  dayId               String    @map("day_id")
+  slotId              String    @map("slot_id")
+  status              String    @default("pendiente") // pendiente | confirmada | cancelada
+  confirmationToken   String?   @unique @map("confirmation_token")
+  confirmedAt         DateTime? @map("confirmed_at")
+  timestamp           DateTime  @default(now())
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  schoolId            String?   @map("school_id")
+  slot                TimeSlot  @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  school              School?   @relation(fields: [schoolId], references: [id], onDelete: SetNull)
 
   @@index([amie])
   @@index([slotId])
   @@index([dayId])
   @@index([email])
   @@index([schoolId])
+  @@index([confirmationToken])
   @@map("reservations")
 }
