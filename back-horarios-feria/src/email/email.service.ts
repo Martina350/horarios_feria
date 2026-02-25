@@ -92,11 +92,18 @@ export class EmailService {
       });
 
       if (result.error) {
-        this.logger.error(
-          `Resend rechazó el envío a ${toEmail}:`,
-          result.error.message || result.error,
-        );
-        throw new Error(result.error.message || 'Error al enviar el correo');
+        const msg = result.error.message || String(result.error);
+        // Restricción de Resend: en modo prueba solo envía al correo de la cuenta
+        const isTestingRestriction = /only send testing emails to your own email|verify a domain/i.test(msg);
+        if (isTestingRestriction) {
+          this.logger.warn(
+            `Email no enviado a ${toEmail}: ${msg}. ` +
+            `Para enviar a cualquier correo, verifica un dominio en resend.com/domains y usa ese dominio en FROM_EMAIL.`,
+          );
+          return; // No lanzar: la reserva ya se creó correctamente
+        }
+        this.logger.error(`Resend rechazó el envío a ${toEmail}:`, msg);
+        throw new Error(msg);
       }
 
       this.logger.log(
