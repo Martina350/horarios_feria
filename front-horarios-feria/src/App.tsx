@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useState, useRef } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useEvents } from "./hooks/useEvents";
 import { useCreateReservation } from "./hooks/useReservations";
 import { DayCard } from "./components/DayCard";
@@ -16,7 +16,11 @@ import logoGMW from "./assets/Logo-GMW-magenta.png";
 /**
  * Componente para la vista pública
  */
+const LOGO_CLICKS_FOR_ADMIN = 7;
+const LOGO_CLICK_RESET_MS = 2500;
+
 function PublicView() {
+  const navigate = useNavigate();
   const { data: days, isLoading, error } = useEvents();
   const createReservation = useCreateReservation();
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
@@ -26,6 +30,23 @@ function PublicView() {
   const [confirmedModalSlotId, setConfirmedModalSlotId] = useState<string | null>(null);
   const [confirmedModalDayLabel, setConfirmedModalDayLabel] = useState("");
   const [confirmedModalSlotTime, setConfirmedModalSlotTime] = useState("");
+  const [logoClickCount, setLogoClickCount] = useState(0);
+  const logoClickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleLogoClick = () => {
+    if (logoClickTimeoutRef.current) {
+      clearTimeout(logoClickTimeoutRef.current);
+      logoClickTimeoutRef.current = null;
+    }
+    const next = logoClickCount + 1;
+    setLogoClickCount(next);
+    if (next >= LOGO_CLICKS_FOR_ADMIN) {
+      setLogoClickCount(0);
+      navigate("/admin");
+      return;
+    }
+    logoClickTimeoutRef.current = setTimeout(() => setLogoClickCount(0), LOGO_CLICK_RESET_MS);
+  };
 
   const handleOpenReservation = (slot: TimeSlot, dayId: string) => {
     setSelectedSlot(slot);
@@ -132,15 +153,20 @@ function PublicView() {
         <header className="bg-primary text-white shadow-lg">
           <div className="container-page py-4 md:py-5 flex flex-col gap-4">
             <div className="flex flex-col md:flex-row md:items-center gap-6">
-              {/* Logo GMW a la izquierda */}
+              {/* Logo GMW: 7 clics abre el panel de administración */}
               <div className="flex flex-col gap-2">
-                <div className="flex items-start">
+                <button
+                  type="button"
+                  onClick={handleLogoClick}
+                  className="flex items-start p-0 border-0 bg-transparent cursor-default text-left focus:outline-none [&:focus]:outline-none [&:focus]:ring-0"
+                  aria-label="Global Money Week"
+                >
                   <img
                     src={logoGMW}
                     alt="Global Money Week"
-                    className="h-24 md:h-32 lg:h-25 w-auto object-contain"
+                    className="h-24 md:h-32 lg:h-25 w-auto object-contain pointer-events-none select-none"
                   />
-                </div>
+                </button>
               </div>
 
               {/* Div de disponibilidad a la derecha */}
