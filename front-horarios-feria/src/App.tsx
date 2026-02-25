@@ -70,7 +70,7 @@ function PublicView() {
         dayId: selectedDayId,
         slotId: selectedSlot.id,
       });
-      handleCloseModal();
+      // No cerrar aquí: ReservationModal muestra "revisa tu correo" + OK y cierra al pulsar OK
     } catch (error) {
       // El error se maneja en el componente ReservationModal
       throw error;

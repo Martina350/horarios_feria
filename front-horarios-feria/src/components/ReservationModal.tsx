@@ -50,7 +50,6 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [showSuccess, setShowSuccess] = useState(false)
-  const [showToast, setShowToast] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
@@ -58,16 +57,8 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
       setError(null)
       setFieldErrors({})
       setShowSuccess(false)
-      setShowToast(false)
     }
   }, [isOpen])
-
-  // Toast de "revisa tu correo" se oculta solo después de 5 s
-  useEffect(() => {
-    if (!showToast) return
-    const t = setTimeout(() => setShowToast(false), 5000)
-    return () => clearTimeout(t)
-  }, [showToast])
 
   if (!isOpen || !slot || !dayId) return null
 
@@ -201,11 +192,6 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
     try {
       await onConfirm(reservationData)
       setShowSuccess(true)
-      setShowToast(true)
-      // Cerrar automáticamente después de 4 segundos para que lean el mensaje
-      setTimeout(() => {
-        onClose()
-      }, 4000)
     } catch (error: any) {
       // Manejar errores del API
       const errorMessage = error?.response?.data?.message || error?.message || 'Error al crear la reserva'
@@ -237,35 +223,33 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-white/70 hover:text-white transition-colors"
-            aria-label="Cerrar"
-          >
-            <span className="material-symbols-outlined">close</span>
-          </button>
+          {!showSuccess && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-white/70 hover:text-white transition-colors"
+              aria-label="Cerrar"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+          )}
         </div>
 
         <div className="modal-body">
           {showSuccess ? (
-            <div className="py-8 text-center">
-              <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-4">
-                <span className="material-symbols-outlined text-4xl text-secondary">mark_email_read</span>
+            <div className="py-8 px-4 text-center">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary/20 mb-4">
+                <span className="material-symbols-outlined text-3xl text-secondary">mark_email_read</span>
               </div>
-              <h3 className="text-xl font-bold text-slate-800 font-gothic mb-2">¡Reserva realizada!</h3>
-              <p className="text-slate-600 font-myriad max-w-md mx-auto">
-                Por favor revisa tu correo electrónico para confirmar los detalles de tu reserva.
-              </p>
-              <p className="text-sm text-slate-500 font-myriad mt-2">
-                Este mensaje se cerrará en unos segundos.
+              <p className="text-slate-700 font-myriad text-base max-w-sm mx-auto mb-6">
+                Por favor revisa tu correo para confirmar la reserva.
               </p>
               <button
                 type="button"
                 onClick={onClose}
-                className="mt-6 px-6 py-2.5 bg-primary text-white font-gothic rounded-xl hover:opacity-90 transition-opacity"
+                className="px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-[var(--color-primary-hover)] transition-all duration-200 font-gothic"
               >
-                Cerrar
+                OK
               </button>
             </div>
           ) : (
@@ -420,31 +404,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
             </>
           )}
         </div>
-        <div className="px-8 py-5 bg-support/5 flex items-center gap-3 border-t border-support/20">
-          <span className="material-symbols-outlined text-support">verified_user</span>
-          <p className="text-sm text-support/80 font-medium font-myriad">
-            Revisa tu correo para confirmar la reserva.
-          </p>
-        </div>
       </div>
-
-      {/* Notificación superior izquierda: revisa tu correo (5 s) */}
-      {showToast && (
-        <div
-          className="fixed top-6 left-6 z-[300] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl bg-secondary text-white text-sm font-medium font-myriad max-w-sm animate-[toastIn_0.3s_ease-out]"
-          role="status"
-          aria-live="polite"
-        >
-          <span className="material-symbols-outlined text-white shrink-0">mail</span>
-          <span>Revisa tu correo para confirmar tu asistencia.</span>
-        </div>
-      )}
-      <style>{`
-        @keyframes toastIn {
-          from { opacity: 0; transform: translateX(-12px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-      `}</style>
     </div>
   )
 }
