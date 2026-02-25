@@ -3,6 +3,7 @@ import type { EventDay, TimeSlot } from "../data/eventData";
 type DayCardProps = {
   day: EventDay;
   onReserveClick: (slot: TimeSlot, dayId: string) => void;
+  onShowConfirmedClick?: (slot: TimeSlot, dayId: string) => void;
 };
 
 function getStatusStyles(available: number) {
@@ -33,7 +34,7 @@ function getStatusStyles(available: number) {
   };
 }
 
-export function DayCard({ day, onReserveClick }: DayCardProps) {
+export function DayCard({ day, onReserveClick, onShowConfirmedClick }: DayCardProps) {
   return (
     <section className="space-y-6">
       <header className="flex items-center gap-3 px-2 mb-1">
@@ -128,6 +129,15 @@ export function DayCard({ day, onReserveClick }: DayCardProps) {
                 >
                   {isFull ? "Sin cupos disponibles" : "Reservar ahora"}
                 </button>
+                {onShowConfirmedClick && (
+                  <button
+                    type="button"
+                    onClick={() => onShowConfirmedClick(slot, day.id)}
+                    className="w-full mt-3 text-sm font-medium text-support hover:text-support-hover transition-colors duration-200 font-myriad underline underline-offset-2"
+                  >
+                    Mostrar instituciones confirmadas
+                  </button>
+                )}
               </div>
               {isFull && (
                 <p className="mt-2 text-xs text-red-600 font-medium font-myriad">

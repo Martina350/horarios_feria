@@ -5,6 +5,7 @@ import { useCreateReservation } from "./hooks/useReservations";
 import { DayCard } from "./components/DayCard";
 import { ReservationModal } from "./components/ReservationModal";
 import { ReservationConfirmToast } from "./components/ReservationConfirmToast";
+import { ConfirmedInstitutionsModal } from "./components/ConfirmedInstitutionsModal";
 import { AdminDashboard } from "./components/admin/AdminDashboard";
 import { LoginPage } from "./components/admin/LoginPage";
 import { useAuth } from "./contexts/AuthContext";
@@ -21,6 +22,10 @@ function PublicView() {
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmedModalOpen, setConfirmedModalOpen] = useState(false);
+  const [confirmedModalSlotId, setConfirmedModalSlotId] = useState<string | null>(null);
+  const [confirmedModalDayLabel, setConfirmedModalDayLabel] = useState("");
+  const [confirmedModalSlotTime, setConfirmedModalSlotTime] = useState("");
 
   const handleOpenReservation = (slot: TimeSlot, dayId: string) => {
     setSelectedSlot(slot);
@@ -32,6 +37,22 @@ function PublicView() {
     setIsModalOpen(false);
     setSelectedSlot(null);
     setSelectedDayId(null);
+  };
+
+  const handleShowConfirmedInstitutions = (slot: TimeSlot, dayId: string) => {
+    const day = days?.find((d) => d.id === dayId);
+    if (!day) return;
+    setConfirmedModalSlotId(slot.id);
+    setConfirmedModalDayLabel(day.day);
+    setConfirmedModalSlotTime(slot.time);
+    setConfirmedModalOpen(true);
+  };
+
+  const handleCloseConfirmedModal = () => {
+    setConfirmedModalOpen(false);
+    setConfirmedModalSlotId(null);
+    setConfirmedModalDayLabel("");
+    setConfirmedModalSlotTime("");
   };
 
   const handleConfirmReservation = async (reservationData: any) => {
@@ -170,10 +191,19 @@ function PublicView() {
                 key={day.id}
                 day={day}
                 onReserveClick={handleOpenReservation}
+                onShowConfirmedClick={handleShowConfirmedInstitutions}
               />
             ))}
           </div>
         </main>
+
+        <ConfirmedInstitutionsModal
+          isOpen={confirmedModalOpen}
+          slotId={confirmedModalSlotId}
+          dayLabel={confirmedModalDayLabel}
+          slotTime={confirmedModalSlotTime}
+          onClose={handleCloseConfirmedModal}
+        />
 
         <ReservationModal
           isOpen={isModalOpen}

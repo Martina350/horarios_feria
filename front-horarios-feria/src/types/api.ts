@@ -60,6 +60,13 @@ export interface EventDayResponse {
   slots: TimeSlotResponse[];
 }
 
+/** Respuesta pública: instituciones confirmadas por slot (solo datos públicos) */
+export interface ConfirmedInstitutionsResponse {
+  day: string;
+  time: string;
+  institutions: Array<{ schoolName: string; students: number }>;
+}
+
 export interface LoginDto {
   email: string;
   password: string;

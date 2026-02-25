@@ -91,6 +91,37 @@ export class EventsService {
   }
 
   /**
+   * Lista pública: instituciones con reserva confirmada para un slot (solo nombre y estudiantes).
+   */
+  async getConfirmedInstitutionsBySlot(slotId: string): Promise<{
+    day: string;
+    time: string;
+    institutions: Array<{ schoolName: string; students: number }>;
+  } | null> {
+    const slot = await this.prisma.timeSlot.findUnique({
+      where: { id: slotId },
+      include: {
+        event: true,
+        reservations: {
+          where: { status: 'confirmada' },
+          select: { schoolName: true, students: true },
+        },
+      },
+    });
+    if (!slot?.event?.date) return null;
+    const time = [slot.timeStart, slot.timeEnd].filter(Boolean).join(' - ') || '—';
+    const day = this.formatDate(slot.event.date);
+    return {
+      day,
+      time,
+      institutions: (slot.reservations || []).map((r) => ({
+        schoolName: r.schoolName,
+        students: r.students ?? 0,
+      })),
+    };
+  }
+
+  /**
    * Formatea la fecha en formato legible
    * Usa métodos UTC para evitar problemas de zona horaria
    */
