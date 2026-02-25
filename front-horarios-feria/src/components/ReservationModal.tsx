@@ -222,22 +222,6 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
 
   return (
     <div className="modal-backdrop">
-      {showToast && (
-        <div
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl bg-secondary text-white text-sm font-medium font-myriad animate-[fadeInUp_0.3s_ease-out]"
-          role="status"
-          aria-live="polite"
-        >
-          <span className="material-symbols-outlined text-white">mail</span>
-          <span>Revisa tu correo para confirmar tu asistencia.</span>
-        </div>
-      )}
-      <style>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translate(-50%, 12px); }
-          to { opacity: 1; transform: translate(-50%, 0); }
-        }
-      `}</style>
       <div className="modal-card">
         <div className="modal-header">
           <div className="modal-header-title">
@@ -443,6 +427,24 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
           </p>
         </div>
       </div>
+
+      {/* Notificación superior izquierda: revisa tu correo (5 s) */}
+      {showToast && (
+        <div
+          className="fixed top-6 left-6 z-[300] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl bg-secondary text-white text-sm font-medium font-myriad max-w-sm animate-[toastIn_0.3s_ease-out]"
+          role="status"
+          aria-live="polite"
+        >
+          <span className="material-symbols-outlined text-white shrink-0">mail</span>
+          <span>Revisa tu correo para confirmar tu asistencia.</span>
+        </div>
+      )}
+      <style>{`
+        @keyframes toastIn {
+          from { opacity: 0; transform: translateX(-12px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
     </div>
   )
 }
