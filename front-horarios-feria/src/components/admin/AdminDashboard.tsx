@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useReservations, useUpdateReservation, useDeleteReservation } from '../../hooks/useReservations';
 import { useGeneralMetrics, useDayMetrics } from '../../hooks/useMetrics';
+import { useEvents } from '../../hooks/useEvents';
 import { MetricsCards } from './MetricsCards';
 import { ChartsSection } from './ChartsSection';
 import { SchoolsTable } from './SchoolsTable';
@@ -16,6 +17,7 @@ export function AdminDashboard() {
   const { data: reservations, isLoading: reservationsLoading } = useReservations();
   const { data: generalMetrics, isLoading: metricsLoading } = useGeneralMetrics();
   const { data: dayMetrics } = useDayMetrics();
+  const { data: days } = useEvents();
   const updateReservation = useUpdateReservation();
   const deleteReservation = useDeleteReservation();
   const [editingReservation, setEditingReservation] = useState<ReservationResponse | null>(null);
@@ -138,6 +140,7 @@ export function AdminDashboard() {
         {/* Tabla de colegios */}
         <SchoolsTable
           reservations={convertedReservations}
+          days={days ?? undefined}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />

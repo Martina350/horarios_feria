@@ -1,18 +1,35 @@
 import { useState, useMemo } from 'react';
-import type { ReservationResponse } from '../../types/api';
+import type { ReservationResponse, EventDayResponse } from '../../types/api';
 import { reportsService } from '../../services/reports.service';
 
-type SchoolsTableProps = {
+export type SchoolsTableProps = {
   reservations: ReservationResponse[];
+  days?: EventDayResponse[];
   onEdit: (reservation: ReservationResponse) => void;
   onDelete: (reservationId: string) => void;
 };
+
+function getDayAndSlotLabels(
+  dayId: string,
+  slotId: string,
+  days?: EventDayResponse[]
+): { dayLabel: string; slotTime: string } {
+  if (!days?.length) return { dayLabel: dayId, slotTime: slotId };
+  const day = days.find((d) => d.id === dayId);
+  if (!day) return { dayLabel: dayId, slotTime: slotId };
+  const slot = day.slots?.find((s) => s.id === slotId);
+  return {
+    dayLabel: day.day,
+    slotTime: slot?.time ?? slotId,
+  };
+}
 
 type SortField = 'timestamp' | 'students' | 'schoolName' | 'amie';
 type SortDirection = 'asc' | 'desc';
 
 export function SchoolsTable({
   reservations,
+  days,
   onEdit,
   onDelete,
 }: SchoolsTableProps) {
@@ -231,8 +248,12 @@ export function SchoolsTable({
                   <td className="px-2 py-2 sm:px-4 sm:py-3 font-semibold text-xs sm:text-sm">
                     {reservation.students}
                   </td>
-                  <td className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm">{reservation.dayId}</td>
-                  <td className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm">{reservation.slotId}</td>
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm">
+                    {getDayAndSlotLabels(reservation.dayId, reservation.slotId, days).dayLabel}
+                  </td>
+                  <td className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm">
+                    {getDayAndSlotLabels(reservation.dayId, reservation.slotId, days).slotTime}
+                  </td>
                   <td className="px-2 py-2 sm:px-4 sm:py-3">
                     {getStatusBadge(reservation.status)}
                   </td>
