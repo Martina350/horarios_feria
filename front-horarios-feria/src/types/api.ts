@@ -82,8 +82,9 @@ export interface LoginResponse {
 }
 
 export interface AmieResponse {
-  code: string;
-  name: string;
+  amie: string;
+  schoolName: string;
+  found?: boolean;
 }
 
 export interface GeneralMetrics {

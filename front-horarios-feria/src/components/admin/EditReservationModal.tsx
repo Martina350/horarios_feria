@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useEvents } from '../../hooks/useEvents';
+import { useAmie } from '../../hooks/useAmie';
 import type { ReservationResponse } from '../../types/api';
 
 type EditReservationModalProps = {
@@ -30,6 +31,19 @@ export function EditReservationModal({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
+  const amieTrimmed = form.amie.trim();
+  const amieReady =
+    amieTrimmed.length >= 6 &&
+    /^[A-Za-z0-9]+$/.test(amieTrimmed) &&
+    (amieTrimmed.match(/\d/g) || []).length <= 10;
+  const { data: amieData } = useAmie(amieTrimmed, amieReady);
+
+  useEffect(() => {
+    if (amieData?.schoolName) {
+      setForm((prev) => ({ ...prev, schoolName: amieData.schoolName }));
+    }
+  }, [amieData]);
+
   useEffect(() => {
     setForm({
       amie: reservation.amie,
@@ -51,15 +65,12 @@ export function EditReservationModal({
 
     const amieTrimmed = form.amie.trim();
     if (!amieTrimmed) newErrors.amie = 'El código AMIE es obligatorio.';
-    if (amieTrimmed && amieTrimmed.length < 10) {
-      newErrors.amie = 'El código AMIE debe tener al menos 10 caracteres.';
-    }
     if (amieTrimmed && /[^a-zA-Z0-9]/.test(amieTrimmed)) {
       newErrors.amie = 'El código AMIE solo puede contener letras y números.';
     }
     const digitCount = (amieTrimmed.match(/\d/g) || []).length;
-    if (amieTrimmed.length >= 10 && digitCount !== 10) {
-      newErrors.amie = 'El código AMIE debe contener exactamente 10 dígitos.';
+    if (amieTrimmed && digitCount > 10) {
+      newErrors.amie = 'El código AMIE no puede tener más de 10 dígitos.';
     }
     if (!form.schoolName.trim())
       newErrors.schoolName = 'El nombre del colegio es obligatorio.';
@@ -131,12 +142,16 @@ export function EditReservationModal({
               type="text"
               value={form.amie}
               onChange={(e) => {
-                const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                let value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                const digits = (value.match(/\d/g) || []).length;
+                if (digits > 10) {
+                  let seen = 0;
+                  value = value.replace(/\d/g, (d) => (++seen <= 10 ? d : ''));
+                }
                 setForm({ ...form, amie: value });
                 setErrors({ ...errors, amie: '' });
               }}
-              placeholder="Mín. 10 caracteres, 10 dígitos"
-              minLength={10}
+              placeholder="Ej: 17H0522 (máx. 10 dígitos)"
               autoComplete="off"
               className="w-full px-3 py-2 border rounded-lg"
             />

@@ -1,5 +1,6 @@
 import type { TimeSlot } from '../data/eventData'
 import { useEffect, useState } from 'react'
+import { useAmie } from '../hooks/useAmie'
 
 type CreateReservationData = {
   amie: string
@@ -45,11 +46,23 @@ const LIMITS = {
   studentsMax: 200,
 } as const
 
+/** Código AMIE listo para consulta: al menos 6 caracteres, solo alfanumérico, máximo 10 dígitos */
+function isAmieReady(code: string): boolean {
+  const t = code.trim()
+  if (t.length < 6 || !/^[A-Za-z0-9]+$/.test(t)) return false
+  const digits = (t.match(/\d/g) || []).length
+  return digits <= 10
+}
+
 export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: ReservationModalProps) {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [showSuccess, setShowSuccess] = useState(false)
+
+  const amieTrimmed = form.amie.trim()
+  const amieReady = isAmieReady(amieTrimmed)
+  const { data: amieData, isError: amieError } = useAmie(amieTrimmed, isOpen && amieReady)
 
   useEffect(() => {
     if (isOpen) {
@@ -59,6 +72,12 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
       setShowSuccess(false)
     }
   }, [isOpen])
+
+  useEffect(() => {
+    if (amieData?.schoolName) {
+      setForm((prev) => ({ ...prev, schoolName: amieData.schoolName }))
+    }
+  }, [amieData])
 
   if (!isOpen || !slot || !dayId) return null
 
@@ -77,8 +96,13 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
     }
 
     if (field === 'amie') {
-      // Solo letras y números (sin caracteres especiales)
+      // Solo letras y números; máximo 10 dígitos
       value = value.replace(/[^a-zA-Z0-9]/g, '')
+      const digits = (value.match(/\d/g) || []).length
+      if (digits > 10) {
+        let seen = 0
+        value = value.replace(/\d/g, (d) => (++seen <= 10 ? d : ''))
+      }
     }
 
     if (field === 'coordinatorName') {
@@ -118,15 +142,12 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
     const whatsappTrimmed = form.whatsapp.trim()
 
     if (!amieTrimmed) newFieldErrors.amie = 'El código AMIE es obligatorio.'
-    if (amieTrimmed && amieTrimmed.length < 10) {
-      newFieldErrors.amie = 'El código AMIE debe tener al menos 10 caracteres.'
-    }
     if (amieTrimmed && /[^a-zA-Z0-9]/.test(amieTrimmed)) {
       newFieldErrors.amie = 'El código AMIE solo puede contener letras y números.'
     }
     const digitCount = (amieTrimmed.match(/\d/g) || []).length
-    if (amieTrimmed.length >= 10 && digitCount !== 10) {
-      newFieldErrors.amie = 'El código AMIE debe contener exactamente 10 dígitos.'
+    if (amieTrimmed && digitCount > 10) {
+      newFieldErrors.amie = 'El código AMIE no puede tener más de 10 dígitos.'
     }
 
     if (!form.schoolName.trim()) newFieldErrors.schoolName = 'El nombre del colegio es obligatorio.'
@@ -279,13 +300,17 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 type="text"
                 value={form.amie}
                 onChange={(e) => handleChange('amie', e.target.value)}
-                placeholder="Ej: 17H0012345"
-                minLength={10}
+                placeholder="Ej: 17H0522"
                 autoComplete="off"
                 className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
               />
               {fieldErrors.amie && (
                 <p className="mt-1 text-xs text-red-600 font-myriad">{fieldErrors.amie}</p>
+              )}
+              {amieReady && amieError && (
+                <p className="mt-1 text-xs text-slate-500 font-myriad">
+                  No encontrado en el registro. Ingrese el nombre del colegio manualmente.
+                </p>
               )}
             </div>
 

@@ -13,7 +13,7 @@ import { IsAmieCode } from './validators/amie-code.validator';
 export class UpdateReservationDto {
   @IsOptional()
   @IsString()
-  @IsAmieCode({ message: 'El código AMIE debe contener al menos 10 dígitos.' })
+  @IsAmieCode({ message: 'El código AMIE no puede tener más de 10 dígitos.' })
   amie?: string;
 
   @IsOptional()

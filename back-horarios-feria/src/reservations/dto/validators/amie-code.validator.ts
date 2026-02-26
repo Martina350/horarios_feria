@@ -7,7 +7,7 @@ import {
 /**
  * Valida que el código AMIE:
  * - Solo contenga letras y números (alfanumérico).
- * - Contenga exactamente 10 dígitos numéricos (ni menos ni más).
+ * - Tenga como máximo 10 dígitos numéricos (no es obligatorio tener 10).
  */
 export function IsAmieCode(validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {
@@ -20,13 +20,13 @@ export function IsAmieCode(validationOptions?: ValidationOptions) {
         validate(value: unknown): boolean {
           if (typeof value !== 'string') return false;
           const trimmed = value.trim();
-          if (trimmed.length < 10) return false;
+          if (trimmed.length === 0) return false;
           if (!/^[A-Za-z0-9]+$/.test(trimmed)) return false;
           const digitCount = (trimmed.match(/\d/g) || []).length;
-          return digitCount >= 10 && digitCount <= 10;
+          return digitCount <= 10;
         },
         defaultMessage(args: ValidationArguments): string {
-          return 'El código AMIE debe contener al menos 10 dígitos y solo letras y números.';
+          return 'El código AMIE no puede tener más de 10 dígitos y solo puede contener letras y números.';
         },
       },
     });
