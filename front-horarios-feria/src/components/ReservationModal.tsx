@@ -384,7 +384,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                   type="tel"
                   value={form.whatsapp}
                   onChange={(e) => handleChange('whatsapp', e.target.value)}
-                  placeholder="099 999 9999"
+                  placeholder="99 999 9999"
                   className="w-full pl-20 pr-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#1f4b9e]/10 transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
                 />
               </div>
