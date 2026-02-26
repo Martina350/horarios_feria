@@ -37,11 +37,11 @@ function getStatusStyles(available: number) {
 export function DayCard({ day, onReserveClick, onShowConfirmedClick }: DayCardProps) {
   return (
     <section className="space-y-6">
-      <header className="flex items-center gap-3 px-2 mb-1">
-        <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-white shadow-md">
-          <span className="material-symbols-outlined">calendar_month</span>
+      <header className="flex items-center gap-3 px-0 mb-1 rounded-xl bg-[#A72974] text-white shadow-md overflow-hidden">
+        <div className="w-12 h-12 flex items-center justify-center shrink-0">
+          <span className="material-symbols-outlined text-2xl">calendar_month</span>
         </div>
-        <h2 className="text-xl font-extrabold text-secondary uppercase tracking-tight font-childhood">
+        <h2 className="text-xl uppercase tracking-tight font-childhood py-3 pr-4 flex-1">
           {day.day}
         </h2>
       </header>
@@ -123,7 +123,7 @@ export function DayCard({ day, onReserveClick, onShowConfirmedClick }: DayCardPr
 
                 <button
                   type="button"
-                  className="w-full bg-primary hover:bg-[var(--color-primary-hover)] text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-primary/30 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-400 font-childhood active:scale-95"
+                  className="w-full bg-[#006837] hover:bg-[#005229] text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-[#006837]/30 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-400 font-childhood active:scale-95"
                   disabled={isFull}
                   onClick={() => onReserveClick(slot, day.id)}
                 >
@@ -133,7 +133,7 @@ export function DayCard({ day, onReserveClick, onShowConfirmedClick }: DayCardPr
                   <button
                     type="button"
                     onClick={() => onShowConfirmedClick(slot, day.id)}
-                    className="w-full mt-3 text-sm font-medium text-support hover:text-support-hover transition-colors duration-200 font-myriad underline underline-offset-2"
+                    className="w-full mt-3 text-sm font-medium text-secondary hover:text-primary-hover transition-all duration-200 font-myriad underline underline-offset-2"
                   >
                     Mostrar instituciones confirmadas
                   </button>

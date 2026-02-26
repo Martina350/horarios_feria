@@ -257,7 +257,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
             </div>
           ) : (
             <>
-          <div className="mb-8 flex flex-wrap items-center gap-4 bg-support/5 px-4 py-3 rounded-2xl border border-support/20">
+          <div className="mb-8 flex flex-wrap items-center gap-4 bg-accent/5 px-4 py-3 rounded-2xl border border-accent/20">
             <div className="flex items-center gap-2 text-support font-bold text-sm font-gothic">
               <span className="material-symbols-outlined">schedule</span>
               <span>{slot.time}</span>
@@ -279,7 +279,7 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 type="text"
                 value={form.amie}
                 onChange={(e) => handleChange('amie', e.target.value)}
-                placeholder="Ej: 17H0012345 (mín. 10 caracteres, 10 dígitos)"
+                placeholder="Ej: 17H0012345"
                 minLength={10}
                 autoComplete="off"
                 className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
@@ -352,14 +352,14 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 Número de WhatsApp
               </label>
               <div className="relative">
-                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-primary font-bold border-r border-slate-200 pr-3 font-gothic">
+                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-secondary font-bold border-r border-slate-200 pr-3 font-gothic">
                   +593
                 </span>
                 <input
                   type="tel"
                   value={form.whatsapp}
                   onChange={(e) => handleChange('whatsapp', e.target.value)}
-                  placeholder="99 999 9999"
+                  placeholder="099 999 9999"
                   className="w-full pl-20 pr-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#1f4b9e]/10 transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
                 />
               </div>
@@ -393,13 +393,13 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
             <button
               type="button"
               onClick={onClose}
-              className="w-full sm:w-auto px-6 py-3.5 text-slate-500 hover:text-primary font-bold rounded-2xl transition-all duration-200 font-myriad"
+              className="w-full sm:w-auto px-6 py-3.5 text-slate-500 hover:text-secondary font-bold rounded-2xl transition-all duration-200 font-myriad"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="w-full sm:w-auto px-10 py-3.5 bg-primary text-white font-extrabold rounded-2xl shadow-xl shadow-primary/30 hover:bg-[var(--color-primary-hover)] hover:scale-[1.02] active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 text-sm uppercase font-childhood"
+              className="w-full sm:w-auto px-10 py-3.5 bg-secondary text-white rounded-2xl shadow-xl shadow-secondary/30 hover:bg-[var(--color-secondary-hover)] hover:scale-[1.02] active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 text-sm uppercase font-childhood"
             >
               Reservar ahora
               <span className="material-symbols-outlined font-bold">rocket_launch</span>
