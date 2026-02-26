@@ -10,11 +10,7 @@ export class MetricsService {
    */
   async getGeneralMetrics() {
     const reservations = await this.prisma.reservation.findMany({
-      where: {
-        status: {
-          in: ['pendiente', 'confirmada'],
-        },
-      },
+      where: { status: 'confirmada' },
     });
 
     // Total de colegios únicos
@@ -35,14 +31,10 @@ export class MetricsService {
     const occupancyRate =
       totalCapacity > 0 ? (totalStudents / totalCapacity) * 100 : 0;
 
-    // Horarios más solicitados
+    // Horarios más solicitados (solo confirmadas)
     const slotDemand = await this.prisma.reservation.groupBy({
       by: ['slotId'],
-      where: {
-        status: {
-          in: ['pendiente', 'confirmada'],
-        },
-      },
+      where: { status: 'confirmada' },
       _sum: {
         students: true,
       },
@@ -77,14 +69,10 @@ export class MetricsService {
       .sort((a, b) => a.students - b.students)
       .slice(0, 3);
 
-    // Día con mayor demanda
+    // Día con mayor demanda (solo confirmadas)
     const dayDemand = await this.prisma.reservation.groupBy({
       by: ['dayId'],
-      where: {
-        status: {
-          in: ['pendiente', 'confirmada'],
-        },
-      },
+      where: { status: 'confirmada' },
       _sum: {
         students: true,
       },
@@ -126,11 +114,7 @@ export class MetricsService {
         timeSlots: {
           include: {
             reservations: {
-              where: {
-                status: {
-                  in: ['pendiente', 'confirmada'],
-                },
-              },
+              where: { status: 'confirmada' },
             },
           },
         },
@@ -196,11 +180,7 @@ export class MetricsService {
       include: {
         event: true,
         reservations: {
-          where: {
-            status: {
-              in: ['pendiente', 'confirmada'],
-            },
-          },
+          where: { status: 'confirmada' },
         },
       },
     });

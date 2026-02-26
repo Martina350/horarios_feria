@@ -77,8 +77,8 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
     }
 
     if (field === 'amie') {
-      // Solo alfanumérico, máximo 10 caracteres
-      value = value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10)
+      // Solo letras y números (sin caracteres especiales)
+      value = value.replace(/[^a-zA-Z0-9]/g, '')
     }
 
     if (field === 'coordinatorName') {
@@ -118,12 +118,15 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
     const whatsappTrimmed = form.whatsapp.trim()
 
     if (!amieTrimmed) newFieldErrors.amie = 'El código AMIE es obligatorio.'
-    if (amieTrimmed && (amieTrimmed.length < 8 || amieTrimmed.length > 10)) {
-      newFieldErrors.amie =
-        'El código AMIE debe tener entre 8 y 10 caracteres alfanuméricos.'
+    if (amieTrimmed && amieTrimmed.length < 10) {
+      newFieldErrors.amie = 'El código AMIE debe tener al menos 10 caracteres.'
     }
     if (amieTrimmed && /[^a-zA-Z0-9]/.test(amieTrimmed)) {
       newFieldErrors.amie = 'El código AMIE solo puede contener letras y números.'
+    }
+    const digitCount = (amieTrimmed.match(/\d/g) || []).length
+    if (amieTrimmed.length >= 10 && digitCount !== 10) {
+      newFieldErrors.amie = 'El código AMIE debe contener exactamente 10 dígitos.'
     }
 
     if (!form.schoolName.trim()) newFieldErrors.schoolName = 'El nombre del colegio es obligatorio.'
@@ -276,7 +279,9 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
                 type="text"
                 value={form.amie}
                 onChange={(e) => handleChange('amie', e.target.value)}
-                placeholder="Ej: 17H00123"
+                placeholder="Ej: 17H0012345 (mín. 10 caracteres, 10 dígitos)"
+                minLength={10}
+                autoComplete="off"
                 className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
               />
               {fieldErrors.amie && (

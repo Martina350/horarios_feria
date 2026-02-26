@@ -62,26 +62,23 @@ export class ReservationsService {
           throw new NotFoundException('El horario especificado no existe');
         }
 
-        // Validar cupos disponibles
+        // Cupos: solo se cuentan reservas CONFIRMADAS (las pendientes no descuentan cupo)
         const reservedStudents = await tx.reservation.aggregate({
           where: {
             slotId: dto.slotId,
-            status: {
-              in: ['pendiente', 'confirmada'],
-            },
+            status: 'confirmada',
           },
           _sum: {
             students: true,
           },
         });
 
-        const totalReserved =
-          (reservedStudents._sum.students || 0) + dto.students;
-        const available = lockedSlot.capacity - totalReserved;
+        const confirmedOnly = reservedStudents._sum.students || 0;
+        const available = lockedSlot.capacity - confirmedOnly;
 
-        if (available < 0) {
+        if (available < dto.students) {
           throw new BadRequestException(
-            `Cupos insuficientes. Solo hay ${lockedSlot.capacity - (reservedStudents._sum.students || 0)} cupos disponibles para este horario.`,
+            `Cupos insuficientes. Solo hay ${available} cupos disponibles para este horario.`,
           );
         }
 
@@ -246,17 +243,55 @@ export class ReservationsService {
       return { redirectUrl: `${baseRedirect}?confirmed=error` };
     }
 
-    await this.prisma.reservation.update({
-      where: { id: reservation.id },
-      data: {
-        status: 'confirmada',
-        confirmedAt: now,
-        confirmationToken: null, // Invalidar token (un solo uso)
-      } as Prisma.ReservationUncheckedUpdateInput,
-    });
+    // Transacción atómica: verificar cupos (solo confirmadas) y confirmar o cancelar
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const current = await tx.reservation.findUnique({
+          where: { id: reservation.id },
+        });
+        if (!current || current.status !== 'pendiente') {
+          return { redirectUrl: `${baseRedirect}?confirmed=error` };
+        }
 
-    this.logger.log(`Reserva confirmada correctamente: ${reservation.id}`);
-    return { redirectUrl: `${baseRedirect}?confirmed=true` };
+        const reservedStudents = await tx.reservation.aggregate({
+          where: {
+            slotId: reservation.slotId,
+            status: 'confirmada',
+          },
+          _sum: { students: true },
+        });
+        const confirmedOnly = reservedStudents._sum.students || 0;
+        const slot = await tx.timeSlot.findUnique({ where: { id: reservation.slotId } });
+        const capacity = slot?.capacity ?? 0;
+        const free = capacity - confirmedOnly;
+
+        if (free < reservation.students) {
+          await tx.reservation.update({
+            where: { id: reservation.id },
+            data: {
+              status: 'cancelada',
+              confirmationToken: null,
+            } as Prisma.ReservationUncheckedUpdateInput,
+          });
+          this.logger.warn(`Reserva ${reservation.id} no confirmada: sin cupos disponibles`);
+          return { redirectUrl: `${baseRedirect}?confirmed=no_capacity` };
+        }
+
+        await tx.reservation.update({
+          where: { id: reservation.id },
+          data: {
+            status: 'confirmada',
+            confirmedAt: now,
+            confirmationToken: null,
+          } as Prisma.ReservationUncheckedUpdateInput,
+        });
+        this.logger.log(`Reserva confirmada correctamente: ${reservation.id}`);
+        return { redirectUrl: `${baseRedirect}?confirmed=true` };
+      },
+      { isolationLevel: 'Serializable' },
+    );
+
+    return result;
   }
 
   /**
@@ -371,29 +406,22 @@ export class ReservationsService {
         throw new NotFoundException('El horario especificado no existe');
       }
 
-      // Calcular cupos disponibles excluyendo la reserva actual
+      // Cupos: solo reservas confirmadas descuentan; al editar validamos que quepan los estudiantes
       const reservedStudents = await this.prisma.reservation.aggregate({
         where: {
           slotId: targetSlotId,
-          status: {
-            in: ['pendiente', 'confirmada'],
-          },
-          NOT: {
-            id: id, // Excluir la reserva actual
-          },
+          status: 'confirmada',
+          NOT: { id },
         },
-        _sum: {
-          students: true,
-        },
+        _sum: { students: true },
       });
 
-      const totalReserved =
-        (reservedStudents._sum.students || 0) + targetStudents;
-      const available = slot.capacity - totalReserved;
+      const confirmedOnly = reservedStudents._sum.students || 0;
+      const available = slot.capacity - confirmedOnly;
 
-      if (available < 0) {
+      if (available < targetStudents) {
         throw new BadRequestException(
-          `Cupos insuficientes. Solo hay ${slot.capacity - (reservedStudents._sum.students || 0)} cupos disponibles para este horario.`,
+          `Cupos insuficientes. Solo hay ${available} cupos disponibles para este horario.`,
         );
       }
     }

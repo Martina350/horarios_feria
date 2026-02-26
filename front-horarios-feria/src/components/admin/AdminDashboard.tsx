@@ -7,6 +7,7 @@ import { MetricsCards } from './MetricsCards';
 import { ChartsSection } from './ChartsSection';
 import { SchoolsTable } from './SchoolsTable';
 import { EditReservationModal } from './EditReservationModal';
+import { AppFooter } from '../AppFooter';
 import type { ReservationResponse } from '../../types/api';
 
 export function AdminDashboard() {
@@ -87,9 +88,9 @@ export function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#f8f9fa' }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#f8f9fa' }}>
       {/* Header */}
-      <header className="bg-primary text-white shadow-lg">
+      <header className="bg-primary text-white shadow-lg shrink-0">
         <div className="max-w-6xl mx-auto px-3 py-3 sm:px-4 sm:py-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3 sm:gap-4 min-w-0">
@@ -150,6 +151,8 @@ export function AdminDashboard() {
           />
         )}
       </main>
+
+      <AppFooter />
     </div>
   );
 }

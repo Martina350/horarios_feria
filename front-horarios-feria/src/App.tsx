@@ -6,6 +6,7 @@ import { DayCard } from "./components/DayCard";
 import { ReservationModal } from "./components/ReservationModal";
 import { ReservationConfirmToast } from "./components/ReservationConfirmToast";
 import { ConfirmedInstitutionsModal } from "./components/ConfirmedInstitutionsModal";
+import { AppFooter } from "./components/AppFooter";
 import { AdminDashboard } from "./components/admin/AdminDashboard";
 import { LoginPage } from "./components/admin/LoginPage";
 import { useAuth } from "./contexts/AuthContext";
@@ -238,6 +239,8 @@ function PublicView() {
           onClose={handleCloseModal}
           onConfirm={handleConfirmReservation}
         />
+
+        <AppFooter />
       </div>
     </div>
   );

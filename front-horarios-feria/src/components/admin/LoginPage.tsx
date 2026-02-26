@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { AppFooter } from '../AppFooter';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -28,8 +29,9 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 uppercase font-childhood">
             Acceso Administrativo
@@ -89,7 +91,9 @@ export function LoginPage() {
             </button>
           </div>
         </form>
+        </div>
       </div>
+      <AppFooter />
     </div>
   );
 }

@@ -41,20 +41,24 @@ function runConfetti() {
   });
 }
 
+type ConfirmMessage = "success" | "error" | "no_capacity";
+
 /**
- * Detecta ?confirmed=true|error en la URL, muestra confetti + mensaje y limpia el query.
+ * Detecta ?confirmed=true|error|no_capacity en la URL, muestra confetti + mensaje y limpia el query.
  */
 export function ReservationConfirmToast() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const confirmed = searchParams.get("confirmed");
-  const [message, setMessage] = useState<"success" | "error" | null>(null);
+  const [message, setMessage] = useState<ConfirmMessage | null>(null);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (confirmed !== "true" && confirmed !== "error") return;
+    if (confirmed !== "true" && confirmed !== "error" && confirmed !== "no_capacity") return;
 
-    setMessage(confirmed === "true" ? "success" : "error");
+    setMessage(
+      confirmed === "true" ? "success" : confirmed === "no_capacity" ? "no_capacity" : "error"
+    );
 
     if (confirmed === "true") {
       runConfetti();
@@ -78,12 +82,18 @@ export function ReservationConfirmToast() {
     }, 300);
   };
 
-  if (confirmed !== "true" && confirmed !== "error") {
+  if (confirmed !== "true" && confirmed !== "error" && confirmed !== "no_capacity") {
     return null;
   }
   if (message === null) return null;
 
   const isSuccess = message === "success";
+  const isNoCapacity = message === "no_capacity";
+
+  const errorTitle = isNoCapacity ? "Sin cupos disponibles" : "No se pudo confirmar la reserva";
+  const errorText = isNoCapacity
+    ? "El horario ya no tiene cupos disponibles. Puedes hacer una nueva reserva en otro horario."
+    : "El enlace puede haber expirado o ser inválido. Intenta hacer una nueva reserva.";
 
   return (
     <div
@@ -110,14 +120,12 @@ export function ReservationConfirmToast() {
                 isSuccess ? "text-secondary" : "text-red-600"
               }`}
             >
-              {isSuccess
-                ? "Tu reserva ha sido confirmada"
-                : "No se pudo confirmar la reserva"}
+              {isSuccess ? "Tu reserva ha sido confirmada" : errorTitle}
             </h2>
             <p className="mt-2 text-[#6c757d] font-myriad text-sm">
               {isSuccess
                 ? "Gracias por confirmar. Te esperamos en Global Money Week."
-                : "El enlace puede haber expirado o ser inválido. Intenta hacer una nueva reserva."}
+                : errorText}
             </p>
             <button
               type="button"

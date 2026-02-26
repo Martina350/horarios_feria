@@ -18,11 +18,7 @@ export class EventsService {
           timeSlots: {
             include: {
               reservations: {
-                where: {
-                  status: {
-                    in: ['pendiente', 'confirmada'],
-                  },
-                },
+                where: { status: 'confirmada' },
               },
             },
             orderBy: {

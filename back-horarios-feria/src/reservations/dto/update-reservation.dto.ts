@@ -2,18 +2,18 @@ import {
   IsString,
   IsEmail,
   IsInt,
-  IsNotEmpty,
   Min,
   MaxLength,
   Matches,
   IsOptional,
   IsIn,
 } from 'class-validator';
+import { IsAmieCode } from './validators/amie-code.validator';
 
 export class UpdateReservationDto {
   @IsOptional()
   @IsString()
-  @MaxLength(10, { message: 'El código AMIE debe tener máximo 10 caracteres' })
+  @IsAmieCode({ message: 'El código AMIE debe contener al menos 10 dígitos.' })
   amie?: string;
 
   @IsOptional()
