@@ -50,6 +50,9 @@ model School {
   id           String        @id @default(uuid())
   amie         String        @unique
   name         String
+  provincia    String?
+  canton       String?
+  parroquia    String?
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
   reservations Reservation[]

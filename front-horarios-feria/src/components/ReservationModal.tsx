@@ -376,22 +376,17 @@ export function ReservationModal({ isOpen, slot, dayId, onClose, onConfirm }: Re
               <label className="block text-sm font-bold text-slate-700 mb-1 font-gothic">
                 Número de WhatsApp
               </label>
-              <div className="relative">
-                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-secondary font-bold border-r border-slate-200 pr-3 font-gothic">
-                  +593
-                </span>
                 <input
                   type="tel"
                   value={form.whatsapp}
                   onChange={(e) => handleChange('whatsapp', e.target.value)}
-                  placeholder="99 999 9999"
-                  className="w-full pl-20 pr-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#1f4b9e]/10 transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
+                  placeholder="099 999 9999"
+                  className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400 font-medium font-myriad"
                 />
               </div>
               {fieldErrors.whatsapp && (
                 <p className="mt-1 text-xs text-red-600 font-myriad">{fieldErrors.whatsapp}</p>
               )}
-            </div>
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-1 font-gothic">
